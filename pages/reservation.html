@@ -1,0 +1,98 @@
+<div id="reservation-page" class="page hidden">
+  <section class="min-h-screen py-20 bg-gradient-to-br from-amber-50 to-orange-100">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-6xl font-bold text-gradient text-center mb-16 fade-in text-glow">Réserver votre table</h2>
+      <div class="bg-white rounded-3xl shadow-2xl p-12 slide-up">
+        <form id="reservation-form" class="space-y-8">
+          <div class="grid md:grid-cols-2 gap-8">
+            <div>
+              <label for="customer-name" class="block text-lg font-bold text-amber-900 mb-3">
+                <i class="fas fa-user mr-2"></i>Nom complet *
+              </label>
+              <input type="text" id="customer-name" required class="form-input w-full px-6 py-4 rounded-xl text-lg" />
+            </div>
+            <div>
+              <label for="customer-email" class="block text-lg font-bold text-amber-900 mb-3">
+                <i class="fas fa-envelope mr-2"></i>Email *
+              </label>
+              <input type="email" id="customer-email" required class="form-input w-full px-6 py-4 rounded-xl text-lg" />
+            </div>
+          </div>
+          <div>
+            <label for="customer-phone" class="block text-lg font-bold text-amber-900 mb-3">
+              <i class="fas fa-phone mr-2"></i>Téléphone *
+            </label>
+            <input type="tel" id="customer-phone" required class="form-input w-full px-6 py-4 rounded-xl text-lg" />
+          </div>
+          <div class="grid md:grid-cols-2 gap-8">
+            <div>
+              <label for="reservation-date" class="block text-lg font-bold text-amber-900 mb-3">
+                <i class="fas fa-calendar mr-2"></i>Date *
+              </label>
+              <input type="date" id="reservation-date" required class="form-input w-full px-6 py-4 rounded-xl text-lg" />
+            </div>
+            <div>
+              <label for="reservation-time" class="block text-lg font-bold text-amber-900 mb-3">
+                <i class="fas fa-clock mr-2"></i>Heure *
+              </label>
+              <select id="reservation-time" required class="form-input w-full px-6 py-4 rounded-xl text-lg">
+                <option value="">Choisir une heure</option>
+                <option value="12:00">12h00</option>
+                <option value="12:30">12h30</option>
+                <option value="13:00">13h00</option>
+                <option value="13:30">13h30</option>
+                <option value="14:00">14h00</option>
+                <option value="19:00">19h00</option>
+                <option value="19:30">19h30</option>
+                <option value="20:00">20h00</option>
+                <option value="20:30">20h30</option>
+                <option value="21:00">21h00</option>
+                <option value="21:30">21h30</option>
+                <option value="22:00">22h00</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label for="guests-count" class="block text-lg font-bold text-amber-900 mb-3">
+              <i class="fas fa-users mr-2"></i>Nombre de personnes *
+            </label>
+            <select id="guests-count" required class="form-input w-full px-6 py-4 rounded-xl text-lg">
+              <option value="">Choisir le nombre</option>
+              <option value="1">1 personne</option>
+              <option value="2">2 personnes</option>
+              <option value="3">3 personnes</option>
+              <option value="4">4 personnes</option>
+              <option value="5">5 personnes</option>
+              <option value="6">6 personnes</option>
+              <option value="7">7 personnes</option>
+              <option value="8">8 personnes</option>
+              <option value="9">9 personnes</option>
+              <option value="10">10+ personnes</option>
+            </select>
+          </div>
+          <div>
+            <label for="special-requests" class="block text-lg font-bold text-amber-900 mb-3">
+              <i class="fas fa-comment mr-2"></i>Demandes spéciales
+            </label>
+            <textarea id="special-requests" rows="4" class="form-input w-full px-6 py-4 rounded-xl text-lg" placeholder="Allergies, régimes spéciaux, occasion spéciale..."></textarea>
+          </div>
+          <button type="submit" id="submit-reservation" class="btn-primary w-full py-6 rounded-2xl text-2xl font-bold text-white shadow-2xl pulse-glow">
+            <i class="fas fa-check-circle mr-3"></i>
+            <span id="submit-text">Confirmer la réservation</span>
+            <div id="submit-spinner" class="spinner hidden inline-block ml-3"></div>
+          </button>
+        </form>
+        <div id="reservation-success" class="hidden text-center py-12 bounce-in">
+          <div class="text-8xl mb-8">✨</div>
+          <h3 class="text-4xl font-bold text-green-600 mb-6">Réservation confirmée !</h3>
+          <p class="text-xl text-amber-700 mb-8 leading-relaxed">
+            Nous avons bien reçu votre demande de réservation.<br />Vous recevrez une confirmation par email sous peu.
+          </p>
+          <button onclick="resetReservationForm()" class="btn-primary px-8 py-4 rounded-xl text-lg font-bold text-white shadow-lg">
+            <i class="fas fa-plus mr-2"></i>Nouvelle réservation
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
