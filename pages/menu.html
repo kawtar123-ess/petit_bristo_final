@@ -1,0 +1,100 @@
+<div id="menu-page" class="page hidden">
+  <section class="menu-bg min-h-screen py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-6xl font-bold text-gradient text-center mb-20 fade-in text-glow">Notre Menu Gastronomique</h2>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
+        <div class="menu-card bg-white rounded-3xl shadow-2xl overflow-hidden cursor-pointer slide-up" onclick="showMenuDetail('entrees')">
+          <div class="h-64 bg-gradient-to-br from-red-400 via-red-500 to-red-600 flex items-center justify-center relative">
+            <div class="card-icon text-8xl">🥗</div>
+          </div>
+          <div class="p-8">
+            <h3 class="text-3xl font-bold text-amber-900 mb-4">Entrées Raffinées</h3>
+            <p class="text-amber-700 text-lg mb-6">Sélection de hors-d'œuvre délicats aux saveurs équilibrées.</p>
+            <div class="flex justify-between items-center">
+              <div class="text-2xl font-bold text-amber-600">À partir de 18€</div>
+              <i class="fas fa-arrow-right text-amber-600 text-xl"></i>
+            </div>
+          </div>
+        </div>
+        <div class="menu-card bg-white rounded-3xl shadow-2xl overflow-hidden cursor-pointer slide-up" style="animation-delay: 0.1s;" onclick="showMenuDetail('plats')">
+          <div class="h-64 bg-gradient-to-br from-orange-400 via-amber-500 to-yellow-500 flex items-center justify-center relative">
+            <div class="card-icon text-8xl">🍽️</div>
+          </div>
+          <div class="p-8">
+            <h3 class="text-3xl font-bold text-amber-900 mb-4">Plats Signature</h3>
+            <p class="text-amber-700 text-lg mb-6">Créations du chef mettant à l'honneur des produits d'exception.</p>
+            <div class="flex justify-between items-center">
+              <div class="text-2xl font-bold text-amber-600">À partir de 38€</div>
+              <i class="fas fa-arrow-right text-amber-600 text-xl"></i>
+            </div>
+          </div>
+        </div>
+        <div class="menu-card bg-white rounded-3xl shadow-2xl overflow-hidden cursor-pointer slide-up" style="animation-delay: 0.2s;" onclick="showMenuDetail('desserts')">
+          <div class="h-64 bg-gradient-to-br from-pink-400 via-rose-500 to-red-500 flex items-center justify-center relative">
+            <div class="card-icon text-8xl">🍰</div>
+          </div>
+          <div class="p-8">
+            <h3 class="text-3xl font-bold text-amber-900 mb-4">Desserts Divins</h3>
+            <p class="text-amber-700 text-lg mb-6">Douceurs sucrées pour clôturer le repas en beauté.</p>
+            <div class="flex justify-between items-center">
+              <div class="text-2xl font-bold text-amber-600">À partir de 13€</div>
+              <i class="fas fa-arrow-right text-amber-600 text-xl"></i>
+            </div>
+          </div>
+        </div>
+        <div class="menu-card bg-white rounded-3xl shadow-2xl overflow-hidden cursor-pointer slide-up" style="animation-delay: 0.3s;" onclick="showMenuDetail('boissons')">
+          <div class="h-64 bg-gradient-to-br from-blue-400 via-indigo-500 to-purple-600 flex items-center justify-center relative">
+            <div class="card-icon text-8xl">🍷</div>
+          </div>
+          <div class="p-8">
+            <h3 class="text-3xl font-bold text-amber-900 mb-4">Cave Exceptionnelle</h3>
+            <p class="text-amber-700 text-lg mb-6">Vins et champagnes d'exception sélectionnés par notre sommelier.</p>
+            <div class="flex justify-between items-center">
+              <div class="text-2xl font-bold text-amber-600">À partir de 18€</div>
+              <i class="fas fa-arrow-right text-amber-600 text-xl"></i>
+            </div>
+          </div>
+        </div>
+        <div class="menu-card bg-white rounded-3xl shadow-2xl overflow-hidden cursor-pointer slide-up" style="animation-delay: 0.4s;" onclick="showMenuDetail('menu-degustation')">
+          <div class="h-64 bg-gradient-to-br from-green-400 via-emerald-500 to-teal-500 flex items-center justify-center relative">
+            <div class="card-icon text-8xl">🌟</div>
+          </div>
+          <div class="p-8">
+            <h3 class="text-3xl font-bold text-amber-900 mb-4">Menu Dégustation</h3>
+            <p class="text-amber-700 text-lg mb-6">Un voyage culinaire en plusieurs actes orchestré par le chef.</p>
+            <div class="flex justify-between items-center">
+              <div class="text-2xl font-bold text-amber-600">À partir de 85€</div>
+              <i class="fas fa-arrow-right text-amber-600 text-xl"></i>
+            </div>
+          </div>
+        </div>
+        <div class="menu-card bg-white rounded-3xl shadow-2xl overflow-hidden cursor-pointer slide-up" style="animation-delay: 0.5s;" onclick="showMenuDetail('formules')">
+          <div class="h-64 bg-gradient-to-br from-amber-300 via-yellow-400 to-orange-500 flex items-center justify-center relative">
+            <div class="card-icon text-8xl">🍽️</div>
+          </div>
+          <div class="p-8">
+            <h3 class="text-3xl font-bold text-amber-900 mb-4">Formules Gourmandes</h3>
+            <p class="text-amber-700 text-lg mb-6">Pour toutes les occasions : affaires, romantique ou découverte.</p>
+            <div class="flex justify-between items-center">
+              <div class="text-2xl font-bold text-amber-600">À partir de 45€</div>
+              <i class="fas fa-arrow-right text-amber-600 text-xl"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+<div id="menu-modal" class="fixed inset-0 modal-backdrop hidden z-50 flex items-center justify-center p-4">
+  <div class="modal-content bg-white rounded-3xl max-w-4xl w-full max-h-[90%] overflow-y-auto shadow-2xl">
+    <div class="p-8">
+      <div class="flex justify-between items-center mb-8">
+        <h3 id="modal-title" class="text-4xl font-bold text-gradient"></h3>
+        <button onclick="closeMenuModal()" class="w-12 h-12 bg-gradient-to-br from-red-400 to-red-600 text-white rounded-full hover:from-red-500 hover:to-red-700 transition-all duration-300 flex items-center justify-center">
+          <i class="fas fa-times text-xl"></i>
+        </button>
+      </div>
+      <div id="modal-content" class="space-y-6"></div>
+    </div>
+  </div>
+</div>

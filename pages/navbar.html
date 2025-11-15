@@ -1,0 +1,26 @@
+<nav class="nav-modern sticky top-0 z-50 shadow-lg">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center h-20">
+      <div class="flex items-center space-x-4">
+        <div class="w-12 h-12 bg-gradient-to-br from-amber-400 to-amber-600 rounded-full flex items-center justify-center rotate-slow">
+          <i class="fas fa-utensils text-white text-xl"></i>
+        </div>
+        <h1 id="restaurant-name" class="text-3xl font-bold text-gradient">Le Gourmet Parisien</h1>
+      </div>
+      <div class="flex space-x-6">
+        <button onclick="showPage('home')" class="nav-btn px-6 py-3 rounded-xl text-amber-800 hover:text-amber-600 font-semibold transition-all duration-300">
+          <i class="fas fa-home mr-2"></i>Accueil
+        </button>
+        <button onclick="showPage('menu')" class="nav-btn px-6 py-3 rounded-xl text-amber-800 hover:text-amber-600 font-semibold transition-all duration-300">
+          <i class="fas fa-book-open mr-2"></i>Menu
+        </button>
+        <button onclick="showPage('reservation')" class="nav-btn btn-primary px-8 py-3 rounded-xl text-white font-bold shadow-lg">
+          <i class="fas fa-calendar-plus mr-2"></i>Réserver
+        </button>
+        <button onclick="showPage('admin')" class="nav-btn px-6 py-3 rounded-xl text-amber-800 hover:text-amber-600 font-semibold transition-all duration-300">
+          <i class="fas fa-cog mr-2"></i>Admin
+        </button>
+      </div>
+    </div>
+  </div>
+</nav>
