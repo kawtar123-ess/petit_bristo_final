@@ -23,6 +23,53 @@ export function initNavbar(appState) {
   }
 
   window.showPage = showPage;
+  function updateUserState() {
+    const token = localStorage.getItem('restaurant_token');
+    const userEmail = localStorage.getItem('restaurant_user_email') || '';
+    const role = localStorage.getItem('restaurant_user_role') || '';
+    const loginBtn = document.querySelector(`#navbar-container button[onclick="showPage('login')"]`);
+    if (!loginBtn) return;
+
+    if (token) {
+      // if admin, show email with admin badge
+      loginBtn.innerHTML = `<i class="fas fa-user mr-2"></i>${userEmail}${role === 'admin' ? ' (admin)' : ''}`;
+      loginBtn.removeAttribute('onclick');
+      // add logout button area if not present
+      let userArea = document.getElementById('navbar-user-area');
+      if (!userArea) {
+        userArea = document.createElement('div');
+        userArea.id = 'navbar-user-area';
+        userArea.className = 'flex items-center ml-4';
+        loginBtn.parentNode.appendChild(userArea);
+      }
+      userArea.innerHTML = `<button id="logout-btn" class="btn-secondary px-4 py-2 rounded-xl text-white font-semibold">Se déconnecter</button>`;
+      const logoutBtn = document.getElementById('logout-btn');
+      if (logoutBtn) {
+        logoutBtn.addEventListener('click', () => {
+          window.logout();
+        });
+      }
+    } else {
+      loginBtn.innerHTML = `<i class="fas fa-cog mr-2"></i>login`;
+      loginBtn.setAttribute('onclick', "showPage('login')");
+      const ua = document.getElementById('navbar-user-area');
+      if (ua) ua.remove();
+    }
+  }
+
+  window.updateUserState = updateUserState;
+
+  window.logout = function () {
+    localStorage.removeItem('restaurant_token');
+    localStorage.removeItem('restaurant_user_email');
+    localStorage.removeItem('restaurant_user_role');
+    window.showToast('Déconnecté', 'info');
+    updateUserState();
+    if (typeof window.showPage === 'function') window.showPage('home');
+  };
+
+  // initialize user area based on stored state
+  updateUserState();
 
   return { showPage };
 }

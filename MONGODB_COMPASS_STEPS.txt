@@ -1,0 +1,256 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                    📊 PETIT BISTRO + MONGODB COMPASS                         ║
+║                          Guide Étape par Étape                               ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+═══════════════════════════════════════════════════════════════════════════════
+ÉTAPE 1 : TÉLÉCHARGER MONGODB COMPASS
+═══════════════════════════════════════════════════════════════════════════════
+
+🌐 URL : https://www.mongodb.com/try/download/compass
+
+1. Cliquez sur "Download"
+2. Choisissez votre système d'exploitation (Windows, macOS, Linux)
+3. Installez le fichier téléchargé
+4. Ouvrez l'application
+
+═══════════════════════════════════════════════════════════════════════════════
+ÉTAPE 2 : SE CONNECTER À MONGODB
+═══════════════════════════════════════════════════════════════════════════════
+
+🔌 Dans MongoDB Compass :
+
+1. Cherchez le champ "Connection String"
+2. Effacez le contenu par défaut
+3. Copiez-collez :
+   
+   mongodb://127.0.0.1:27017
+   
+4. Cliquez sur "Connect" (ou Ctrl+Enter)
+5. ✅ Attendez le message "Connected"
+
+═══════════════════════════════════════════════════════════════════════════════
+ÉTAPE 3 : ACCÉDER À LA BASE "PETIT_BRISTO"
+═══════════════════════════════════════════════════════════════════════════════
+
+📁 Dans le volet gauche, vous verrez :
+
+┌─ Databases
+│  ├─ admin
+│  ├─ config
+│  └─ petit_bristo  ← CLIQUEZ ICI
+│
+└─ petit_bristo
+   ├─ users
+   ├─ reservations
+   └─ menuitems
+
+═══════════════════════════════════════════════════════════════════════════════
+ÉTAPE 4 : EXPLORER LES COLLECTIONS
+═══════════════════════════════════════════════════════════════════════════════
+
+📋 Collection "users" (Utilisateurs)
+────────────────────────────────────────────────────────────────────────────
+Affiche :
+{
+  "_id": ObjectId("692d72c34085254ab41cb080"),
+  "email": "admin@example.com",
+  "role": "admin"
+}
+
+👉 Cliquez sur le document pour voir tous les détails
+
+📅 Collection "reservations" (Réservations)
+────────────────────────────────────────────────────────────────────────────
+Format :
+{
+  "_id": ObjectId(...),
+  "customerName": "Jean Dupont",
+  "customerEmail": "jean@example.com",
+  "customerPhone": "+33612345678",
+  "date": "2025-12-15",
+  "time": "19:00",
+  "guests": 4,
+  "specialRequests": "Pas d'oignons",
+  "status": "confirmed",
+  "createdAt": ISODate(...)
+}
+
+🍽️  Collection "menuitems" (Menu)
+────────────────────────────────────────────────────────────────────────────
+Format :
+{
+  "_id": ObjectId(...),
+  "category": "plats",
+  "name": "Bœuf de Kobé grillé",
+  "description": "Filet de bœuf de Kobé...",
+  "price": "65€"
+}
+
+═══════════════════════════════════════════════════════════════════════════════
+ÉTAPE 5 : AJOUTER DES DOCUMENTS
+═══════════════════════════════════════════════════════════════════════════════
+
+✏️  Comment ajouter un plat au menu :
+
+1. Cliquez sur la collection "menuitems"
+2. Cliquez sur le bouton vert "+ INSERT DOCUMENT"
+3. Remplacez le JSON par :
+
+   {
+     "category": "entrees",
+     "name": "Salade de Homard",
+     "description": "Homard frais avec mayonnaise maison",
+     "price": "32€"
+   }
+
+4. Cliquez sur "Insert"
+5. ✅ Le document est ajouté à la base
+
+═══════════════════════════════════════════════════════════════════════════════
+ÉTAPE 6 : MODIFIER UN DOCUMENT
+═══════════════════════════════════════════════════════════════════════════════
+
+🖊️  Comment modifier un plat existant :
+
+1. Cliquez sur le plat dans la liste
+2. Double-cliquez sur la valeur à modifier
+3. Tapez la nouvelle valeur
+4. Appuyez sur Enter
+5. ✅ La modification est sauvegardée automatiquement
+
+📌 Exemples de modifications :
+   - "price": "65€" → "price": "72€"
+   - "description": "Description ancienne" → "Description nouvelle"
+
+═══════════════════════════════════════════════════════════════════════════════
+ÉTAPE 7 : SUPPRIMER UN DOCUMENT
+═══════════════════════════════════════════════════════════════════════════════
+
+🗑️  Comment supprimer un document :
+
+1. Survolez le document dans la liste
+2. Cliquez sur l'icône 🗑️ "Delete"
+3. Confirmez : "Delete"
+4. ✅ Le document est supprimé
+
+⚠️  Cette action est irréversible !
+
+═══════════════════════════════════════════════════════════════════════════════
+ÉTAPE 8 : FILTRER LES DONNÉES
+═══════════════════════════════════════════════════════════════════════════════
+
+🔍 Comment filtrer les réservations par statut :
+
+1. Cliquez sur la collection "reservations"
+2. Cliquez sur "Filter" (ou l'icône 🔍)
+3. Entrez le JSON de filtre :
+
+   { "status": "confirmed" }
+
+4. Appuyez sur Enter
+5. ✅ Seules les réservations confirmées s'affichent
+
+📌 Autres filtres utiles :
+   { "status": "pending" }        → Réservations en attente
+   { "date": "2025-12-15" }       → Réservations d'une date
+   { "guests": { "$gte": 6 } }    → Réservations de 6+ personnes
+
+═══════════════════════════════════════════════════════════════════════════════
+ÉTAPE 9 : EXPORTER LES DONNÉES
+═══════════════════════════════════════════════════════════════════════════════
+
+💾 Comment exporter la collection en JSON :
+
+1. Cliquez sur la collection
+2. Cliquez sur "..." (menu en haut à droite)
+3. Sélectionnez "Export Collection"
+4. Choisissez le format : JSON ou CSV
+5. Choisissez l'emplacement pour sauvegarder
+6. ✅ Le fichier est exporté
+
+═══════════════════════════════════════════════════════════════════════════════
+ÉTAPE 10 : IMPORTER DES DONNÉES
+═══════════════════════════════════════════════════════════════════════════════
+
+📂 Comment importer un fichier JSON :
+
+1. Cliquez sur la collection "menuitems"
+2. Cliquez sur "..." (menu en haut à droite)
+3. Sélectionnez "Import Collection"
+4. Choisissez votre fichier JSON
+5. Cliquez sur "Import"
+6. ✅ Les données sont ajoutées
+
+═══════════════════════════════════════════════════════════════════════════════
+COMMANDES TERMINAL UTILES
+═══════════════════════════════════════════════════════════════════════════════
+
+📱 Pour visualiser les données rapidement (sans Compass) :
+
+npm run view-data
+├─ Affiche les utilisateurs
+├─ Affiche les réservations
+└─ Affiche le menu complet
+
+🌱 Pour ajouter les plats du menu :
+
+npm run seed-menu
+
+👤 Pour créer un administrateur :
+
+npm run init-admin
+
+═══════════════════════════════════════════════════════════════════════════════
+RACCOURCIS COMPASS
+═══════════════════════════════════════════════════════════════════════════════
+
+Raccourci          │ Action
+─────────────────────────────────────────────────────────────────────────────
+Ctrl+Enter         │ Se connecter
+F5 ou Cmd+R        │ Actualiser la collection
+Ctrl+F             │ Rechercher
+Ctrl+L             │ Effacer la barre de recherche
+...                │ Ouvrir le menu d'options
+
+═══════════════════════════════════════════════════════════════════════════════
+DÉPANNAGE
+═══════════════════════════════════════════════════════════════════════════════
+
+❌ "Connection refused"
+→ Assurez-vous que MongoDB est en cours d'exécution
+→ Redémarrez le service MongoDB
+
+❌ Base "petit_bristo" non visible
+→ Exécutez : npm run init-admin
+→ Actualisez Compass (F5)
+
+❌ Impossible de modifier un document
+→ Essayez de fermer et rouvrir la collection
+→ Vérifiez que vous avez les permissions d'écriture
+
+❌ Erreur lors de l'import
+→ Vérifiez que le fichier JSON est valide
+→ Utilisez un validateur JSON : https://jsonlint.com/
+
+═══════════════════════════════════════════════════════════════════════════════
+RESSOURCES
+═══════════════════════════════════════════════════════════════════════════════
+
+📚 Documentation MongoDB Compass :
+   https://docs.mongodb.com/compass/
+
+📚 MongoDB Query Language :
+   https://docs.mongodb.com/manual/reference/operator/query/
+
+💻 Télécharger Compass :
+   https://www.mongodb.com/try/download/compass
+
+🎓 Tutoriels MongoDB :
+   https://www.mongodb.com/docs/manual/introduction/
+
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ VOUS ÊTES MAINTENANT PRÊT À GÉRER VOTRE BASE MONGODB ! 🚀
+
+═══════════════════════════════════════════════════════════════════════════════

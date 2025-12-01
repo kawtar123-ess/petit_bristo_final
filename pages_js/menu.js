@@ -53,7 +53,27 @@ const menuData = {
   }
 };
 
-export function initMenuPage() {
+export async function initMenuPage() {
+  // attempt to fetch menu from backend, fallback to local menuData
+  try {
+    const res = await fetch('/api/menu');
+    if (res.ok) {
+      const serverMenu = await res.json();
+      // serverMenu is grouped by category
+      Object.keys(serverMenu).forEach((cat) => {
+        const group = serverMenu[cat];
+        // normalize key name for lookup in frontend
+        const key = cat;
+        menuData[key] = {
+          title: group.title || cat,
+          items: group.items || []
+        };
+      });
+    }
+  } catch (err) {
+    console.warn('Unable to fetch menu from API, using local menuData', err);
+  }
+
   const modal = document.getElementById('menu-modal');
   if (modal) {
     modal.addEventListener('click', (event) => {

@@ -119,8 +119,9 @@ export function initAdminPage(appState) {
   }
 
   async function updateReservationStatus(backendId, newStatus) {
-    if (!window.dataSdk) {
-      window.showToast("Data SDK non disponible. Mise à jour impossible.", 'error');
+    const token = localStorage.getItem('restaurant_token');
+    if (!token) {
+      window.showToast('Non autorisé. Veuillez vous connecter en tant qu\'administrateur.', 'error');
       return;
     }
 
@@ -129,19 +130,39 @@ export function initAdminPage(appState) {
       return;
     }
 
-    const updatedReservation = { ...reservation, status: newStatus };
-    const result = await window.dataSdk.update(updatedReservation);
-
-    if (result.isOk) {
-      window.showToast(`Réservation ${getStatusText(newStatus).toLowerCase()}`, 'success');
-    } else {
-      window.showToast('Erreur lors de la mise à jour', 'error');
+    try {
+      const res = await fetch(`/api/reservations/${backendId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ status: newStatus })
+      });
+      const json = await res.json();
+      if (res.ok && json.isOk) {
+        window.showToast(`Réservation ${getStatusText(newStatus).toLowerCase()}`, 'success');
+        // update local state
+        const idx = appState.reservations.findIndex((r) => r.__backendId === backendId);
+        if (idx !== -1) {
+          appState.reservations[idx] = { ...appState.reservations[idx], status: newStatus };
+          appState.filteredReservations = [...appState.reservations];
+          updateReservationsList();
+          updateStatistics();
+        }
+      } else {
+        window.showToast(json.error || 'Erreur lors de la mise à jour', 'error');
+      }
+    } catch (err) {
+      console.error(err);
+      window.showToast('Erreur réseau lors de la mise à jour', 'error');
     }
   }
 
   async function deleteReservation(backendId) {
-    if (!window.dataSdk) {
-      window.showToast('Data SDK non disponible. Suppression impossible.', 'error');
+    const token = localStorage.getItem('restaurant_token');
+    if (!token) {
+      window.showToast('Non autorisé. Veuillez vous connecter en tant qu\'administrateur.', 'error');
       return;
     }
 
@@ -150,11 +171,24 @@ export function initAdminPage(appState) {
       return;
     }
 
-    const result = await window.dataSdk.delete(reservation);
-    if (result.isOk) {
-      window.showToast('Réservation supprimée', 'success');
-    } else {
-      window.showToast('Erreur lors de la suppression', 'error');
+    try {
+      const res = await fetch(`/api/reservations/${backendId}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      const json = await res.json();
+      if (res.ok && json.isOk) {
+        window.showToast('Réservation supprimée', 'success');
+        appState.reservations = appState.reservations.filter((r) => r.__backendId !== backendId);
+        appState.filteredReservations = [...appState.reservations];
+        updateReservationsList();
+        updateStatistics();
+      } else {
+        window.showToast(json.error || 'Erreur lors de la suppression', 'error');
+      }
+    } catch (err) {
+      console.error(err);
+      window.showToast('Erreur réseau lors de la suppression', 'error');
     }
   }
 

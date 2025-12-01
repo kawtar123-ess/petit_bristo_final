@@ -3,6 +3,7 @@ import { initHomePage } from './pages_js/home.js';
 import { initMenuPage } from './pages_js/menu.js';
 import { initReservationPage } from './pages_js/reservation.js';
 import { initAdminPage } from './pages_js/admin.js';
+import { initLoginPage } from './pages_js/login.js';
 
 const defaultConfig = {
   restaurant_name: 'Le Gourmet Parisien',
@@ -57,14 +58,35 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   const navbarApi = initNavbar(appState);
   initHomePage(appState);
-  initMenuPage(appState);
+  await initMenuPage(appState);
   const reservationApi = initReservationPage(appState);
   const adminApi = initAdminPage(appState);
+  const loginApi = initLoginPage(appState);
 
   appState.updateReservationsList = adminApi.updateReservationsList;
   appState.updateStatistics = adminApi.updateStatistics;
 
-  await initializeDataSdk(adminApi);
+  // Fetch reservations for admin if logged in
+  try {
+    const token = localStorage.getItem('restaurant_token');
+    const role = localStorage.getItem('restaurant_user_role');
+    if (token && role === 'admin') {
+      const res = await fetch('/api/reservations', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (res.ok) {
+        const items = await res.json();
+        // normalize for frontend (add __backendId used in templates)
+        appState.reservations = items.map((it) => ({ ...it, __backendId: it._id }));
+        appState.filteredReservations = [...appState.reservations];
+        if (appState.updateReservationsList) appState.updateReservationsList();
+        if (appState.updateStatistics) appState.updateStatistics();
+      }
+    }
+  } catch (err) {
+    console.warn('Unable to fetch reservations from API', err);
+  }
+
   await initializeElementSdk();
 
   if (navbarApi?.showPage) {
@@ -82,7 +104,8 @@ async function loadSections() {
     { id: 'home-container', file: 'pages/home.html' },
     { id: 'menu-container', file: 'pages/menu.html' },
     { id: 'reservation-container', file: 'pages/reservation.html' },
-    { id: 'admin-container', file: 'pages/admin.html' }
+    { id: 'admin-container', file: 'pages/admin.html' },
+    { id: 'login-container', file: 'pages/login.html' }
   ];
 
   await Promise.all(

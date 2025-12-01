@@ -1,0 +1,51 @@
+<div id="login-page" class="page hidden">
+  <section class="min-h-screen flex items-center justify-center px-4 py-20 bg-gradient-to-br from-amber-50 to-orange-100">
+    <div class="w-full max-w-md bg-white rounded-2xl shadow-2xl p-8 space-y-6">
+      <div class="text-center">
+        <div class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-tr from-orange-400 via-red-500 to-pink-500 shadow-lg mx-auto">
+          <i class="fa-solid fa-utensils text-2xl text-white"></i>
+        </div>
+        <h1 class="text-2xl font-bold mt-4 text-amber-900">Connexion</h1>
+        <p class="text-sm text-amber-700/80">Accédez à votre espace de réservation premium.</p>
+      </div>
+
+      <div id="login-message" class="hidden text-sm rounded-lg px-3 py-2"></div>
+
+      <form id="login-form" class="space-y-4">
+        <div>
+          <label for="email" class="text-sm font-medium text-amber-800">Adresse e-mail</label>
+          <div class="flex items-center gap-2 border rounded-xl px-3 py-2 mt-2">
+            <i class="fa-solid fa-envelope text-orange-400"></i>
+            <input id="email" type="email" required class="w-full bg-transparent outline-none text-sm" placeholder="exemple@restaurant.com" />
+          </div>
+        </div>
+
+        <div>
+          <label for="password" class="text-sm font-medium text-amber-800">Mot de passe</label>
+          <div class="flex items-center gap-2 border rounded-xl px-3 py-2 mt-2">
+            <i class="fa-solid fa-lock text-orange-400"></i>
+            <input id="password" type="password" minlength="6" required class="w-full bg-transparent outline-none text-sm" placeholder="••••••••" />
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between text-xs text-amber-700/80">
+          <label class="inline-flex items-center gap-2 cursor-pointer">
+            <input id="remember" type="checkbox" class="rounded" />
+            <span>Se souvenir de moi</span>
+          </label>
+          <button type="button" class="hover:underline" onclick="alert('Fonctionnalité à implémenter 🤏')">Mot de passe oublié ?</button>
+        </div>
+
+        <button type="submit" class="w-full inline-flex items-center justify-center gap-2 bg-gradient-to-r from-orange-500 to-amber-500 text-white font-semibold rounded-xl py-2.5">
+          <span>Se connecter</span>
+          <i class="fa-solid fa-arrow-right-long text-xs"></i>
+        </button>
+      </form>
+
+      <div class="text-center text-xs text-amber-700/80">
+        <p>Retour au site : <button onclick="showPage('home')" class="font-semibold">Page principale</button></p>
+      </div>
+    </div>
+  </section>
+</div>
+              class="flex items-center gap-2 bg-white/10 border border-white/20 rounded-xl px-3 py-2 focus-within:border-orange-400 focus-within:bg-white/15 transition"

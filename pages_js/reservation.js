@@ -35,8 +35,6 @@ async function handleReservationSubmit(event, appState) {
   }
 
   const formData = {
-    id: Date.now().toString(),
-    type: 'reservation',
     customerName: document.getElementById('customer-name')?.value || '',
     customerEmail: document.getElementById('customer-email')?.value || '',
     customerPhone: document.getElementById('customer-phone')?.value || '',
@@ -44,24 +42,35 @@ async function handleReservationSubmit(event, appState) {
     time: document.getElementById('reservation-time')?.value || '',
     guests: parseInt(document.getElementById('guests-count')?.value || '0', 10),
     specialRequests: document.getElementById('special-requests')?.value || '',
-    status: 'pending',
-    createdAt: new Date().toISOString()
+    status: 'pending'
   };
 
-  if (!window.dataSdk) {
-    window.showToast("Data SDK non disponible. Impossible d'enregistrer la réservation.", 'error');
-    resetButtonState(submitButton, submitText, submitSpinner);
-    return;
-  }
+  try {
+    const res = await fetch('/api/reservations', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData)
+    });
+    const json = await res.json();
+    if (res.ok && json.isOk) {
+      document.getElementById('reservation-form')?.classList.add('hidden');
+      document.getElementById('reservation-success')?.classList.remove('hidden');
+      window.showToast('Réservation enregistrée avec succès !', 'success');
 
-  const result = await window.dataSdk.create(formData);
-
-  if (result.isOk) {
-    document.getElementById('reservation-form')?.classList.add('hidden');
-    document.getElementById('reservation-success')?.classList.remove('hidden');
-    window.showToast('Réservation enregistrée avec succès !', 'success');
-  } else {
-    window.showToast("Erreur lors de l'enregistrement. Veuillez réessayer.", 'error');
+      // update local state if available
+      if (Array.isArray(appState.reservations)) {
+        const r = json.reservation;
+        r.__backendId = r._id;
+        appState.reservations.unshift(r);
+        if (typeof appState.updateReservationsList === 'function') appState.updateReservationsList();
+        if (typeof appState.updateStatistics === 'function') appState.updateStatistics();
+      }
+    } else {
+      window.showToast(json.error || "Erreur lors de l'enregistrement. Veuillez réessayer.", 'error');
+    }
+  } catch (err) {
+    console.error(err);
+    window.showToast('Erreur réseau. Veuillez réessayer.', 'error');
   }
 
   resetButtonState(submitButton, submitText, submitSpinner);
