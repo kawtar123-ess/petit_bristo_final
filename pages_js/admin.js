@@ -307,7 +307,207 @@ export function initAdminPage(appState) {
   document.getElementById('add-menu-form')?.addEventListener('submit', addMenuItem);
   loadMenuItems();
 
-  return { updateReservationsList, updateStatistics };
+  // Orders management
+  let adminOrders = [];
+
+  async function loadAdminOrders() {
+    const token = localStorage.getItem('restaurant_token');
+    if (!token) return;
+
+    try {
+      const response = await fetch('/api/orders/admin/all', {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Erreur lors du chargement des commandes');
+      }
+
+      adminOrders = await response.json();
+      renderAdminOrders();
+    } catch (error) {
+      console.error('Error loading admin orders:', error);
+    }
+  }
+
+  function renderAdminOrders() {
+    const container = document.getElementById('orders-list-container');
+    if (!container) return;
+
+    if (adminOrders.length === 0) {
+      container.innerHTML = `
+        <div class="text-center text-amber-600 py-12">
+          <i class="fas fa-inbox text-6xl mb-4 opacity-50"></i>
+          <p class="text-2xl font-semibold">Aucune commande pour le moment</p>
+        </div>
+      `;
+      return;
+    }
+
+    // Calculate totals
+    const totalOrders = adminOrders.length;
+    const totalAmount = adminOrders.reduce((sum, order) => sum + (order.totalPrice || 0), 0);
+
+    // Update summary
+    const totalOrdersEl = document.getElementById('admin-total-orders');
+    const totalAmountEl = document.getElementById('admin-total-amount');
+    if (totalOrdersEl) totalOrdersEl.textContent = totalOrders;
+    if (totalAmountEl) totalAmountEl.textContent = `${totalAmount.toFixed(2)}€`;
+
+    // Render orders
+    container.innerHTML = adminOrders
+      .map(
+        (order, index) => `
+      <div class="bg-white border-2 border-amber-200 rounded-2xl overflow-hidden hover:shadow-lg transition-all slide-up" style="animation-delay: ${index * 0.05}s;">
+        <div class="bg-gradient-to-r from-blue-500 to-blue-600 p-6 text-white">
+          <div class="flex justify-between items-start">
+            <div>
+              <p class="text-sm opacity-90">Commande #${order._id ? order._id.substring(order._id.length - 8).toUpperCase() : 'UNKNOWN'}</p>
+              <p class="text-lg font-semibold mt-1">${new Date(order.orderDate).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
+            </div>
+            <div class="text-right">
+              <p class="font-bold text-xl">${order.totalPrice.toFixed(2)}€</p>
+              <p class="text-sm opacity-90 mt-1">${order.items.length} article${order.items.length > 1 ? 's' : ''}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-6">
+          <!-- Customer Info -->
+          <div class="grid md:grid-cols-2 gap-4 mb-6 pb-6 border-b border-amber-100">
+            <div>
+              <p class="text-sm text-amber-600 font-semibold">Client</p>
+              <p class="text-lg font-bold text-amber-900">${order.userName || 'N/A'}</p>
+              <p class="text-sm text-amber-700">${order.userEmail || ''}</p>
+            </div>
+            <div class="text-right">
+              <p class="text-sm text-amber-600 font-semibold">Statut</p>
+              <span class="inline-block px-3 py-1 rounded-full text-sm font-bold ${getOrderStatusClass(order.status)}">
+                ${getOrderStatusLabel(order.status)}
+              </span>
+            </div>
+          </div>
+
+          <!-- Items -->
+          <div class="mb-6">
+            <h4 class="font-bold text-amber-900 mb-3">Articles</h4>
+            <div class="space-y-2 text-sm">
+              ${order.items
+                .map(
+                  (item) => `
+                <div class="flex justify-between items-center text-amber-700">
+                  <span>${item.name} × ${item.quantity}</span>
+                  <span class="font-semibold">${(item.price * item.quantity).toFixed(2)}€</span>
+                </div>
+              `
+                )
+                .join('')}
+            </div>
+          </div>
+
+          <!-- Total -->
+          <div class="bg-amber-50 rounded-lg p-4 mb-6">
+            <div class="flex justify-between items-center">
+              <span class="font-bold text-amber-900">Total</span>
+              <span class="text-2xl font-bold text-amber-600">${order.totalPrice.toFixed(2)}€</span>
+            </div>
+          </div>
+
+          <!-- Notes (if any) -->
+          ${order.notes ? `
+            <div class="bg-blue-50 rounded-lg p-4 mb-6 border-l-4 border-blue-400">
+              <p class="text-sm text-blue-600 font-semibold mb-2">Notes:</p>
+              <p class="text-blue-800">${order.notes}</p>
+            </div>
+          ` : ''}
+
+          <!-- Actions -->
+          <div class="flex gap-3">
+            ${order.status !== 'completed' ? `
+              <button onclick="updateOrderStatus('${order._id}', 'completed')" class="flex-1 bg-green-500 hover:bg-green-600 text-white py-2 rounded-lg font-semibold transition-all">
+                <i class="fas fa-check mr-2"></i>Marquer comme livrée
+              </button>
+            ` : ''}
+            ${order.status !== 'cancelled' ? `
+              <button onclick="updateOrderStatus('${order._id}', 'cancelled')" class="flex-1 bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg font-semibold transition-all">
+                <i class="fas fa-times mr-2"></i>Annuler
+              </button>
+            ` : ''}
+          </div>
+        </div>
+      </div>
+    `
+      )
+      .join('');
+  }
+
+  function getOrderStatusClass(status) {
+    const classes = {
+      pending: 'text-yellow-700 bg-yellow-100',
+      confirmed: 'text-blue-700 bg-blue-100',
+      completed: 'text-green-700 bg-green-100',
+      cancelled: 'text-red-700 bg-red-100'
+    };
+    return classes[status] || classes.pending;
+  }
+
+  function getOrderStatusLabel(status) {
+    const labels = {
+      pending: 'En attente',
+      confirmed: 'Confirmée',
+      completed: 'Livrée',
+      cancelled: 'Annulée'
+    };
+    return labels[status] || 'Inconnu';
+  }
+
+  window.switchAdminTab = function (tabName) {
+    const tabs = document.querySelectorAll('.admin-tab');
+    const tabContents = document.querySelectorAll('.admin-tab-content');
+
+    tabs.forEach((tab) => tab.classList.remove('active'));
+    tabContents.forEach((content) => content.classList.add('hidden'));
+
+    document.getElementById(`tab-${tabName}`).classList.add('active');
+    document.getElementById(`${tabName}-tab-content`).classList.remove('hidden');
+
+    if (tabName === 'orders') {
+      loadAdminOrders();
+    }
+  };
+
+  window.updateOrderStatus = async function (orderId, status) {
+    const token = localStorage.getItem('restaurant_token');
+    if (!token) {
+      window.showToast('Non autorisé', 'error');
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/orders/${orderId}/status`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ status })
+      });
+
+      if (!response.ok) {
+        throw new Error('Erreur lors de la mise à jour');
+      }
+
+      window.showToast('Statut mis à jour avec succès', 'success');
+      loadAdminOrders();
+    } catch (error) {
+      console.error('Error updating order status:', error);
+      window.showToast(`Erreur: ${error.message}`, 'error');
+    }
+  };
+
+  return { updateReservationsList, updateStatistics, loadAdminOrders };
 }
 
 function animateNumber(elementId, targetValue) {
@@ -388,5 +588,3 @@ function formatDate(dateString) {
     day: 'numeric'
   });
 }
-
-

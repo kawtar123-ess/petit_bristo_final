@@ -106,10 +106,17 @@ export function initNavbar(appState) {
           userArea.className = 'flex items-center ml-4';
           navArea.appendChild(userArea);
         }
-        userArea.innerHTML = `<button id="my-res-btn" class="nav-btn px-6 py-3 rounded-xl text-amber-800 hover:text-amber-600 font-semibold mr-4">Mes réservations</button><button id="logout-btn" class="btn-secondary px-4 py-2 rounded-xl text-white font-semibold">Se déconnecter</button>`;
+        userArea.innerHTML = `<button id="my-orders-btn" class="nav-btn px-6 py-3 rounded-xl text-amber-800 hover:text-amber-600 font-semibold mr-2">Mes commandes</button><button id="my-res-btn" class="nav-btn px-6 py-3 rounded-xl text-amber-800 hover:text-amber-600 font-semibold mr-4">Mes réservations</button><button id="logout-btn" class="btn-secondary px-4 py-2 rounded-xl text-white font-semibold">Se déconnecter</button>`;
 
         const logoutBtn = document.getElementById('logout-btn');
         const myResBtn = document.getElementById('my-res-btn');
+        const myOrdersBtn = document.getElementById('my-orders-btn');
+        if (myOrdersBtn) {
+          myOrdersBtn.addEventListener('click', () => {
+            if (typeof window.showPage === 'function') window.showPage('orders');
+            if (typeof window.displayUserOrders === 'function') window.displayUserOrders();
+          });
+        }
         if (myResBtn) {
           myResBtn.addEventListener('click', () => {
             if (typeof window.showPage === 'function') window.showPage('user-dashboard');

@@ -86,12 +86,51 @@
       </div>
       <div class="bg-white rounded-3xl shadow-2xl overflow-hidden fade-in">
         <div class="px-8 py-6 bg-gradient-to-r from-amber-500 to-amber-600">
-          <h3 class="text-3xl font-bold text-white"><i class="fas fa-list mr-3"></i>Réservations</h3>
+          <h3 class="text-3xl font-bold text-white"><i class="fas fa-list mr-3"></i>Gestion</h3>
         </div>
-        <div id="reservations-list" class="divide-y divide-amber-100">
-          <div class="p-12 text-center text-amber-600">
-            <i class="fas fa-calendar-times text-6xl mb-4 opacity-50"></i>
-            <p class="text-2xl font-semibold">Aucune réservation pour le moment</p>
+        
+        <!-- Tabs -->
+        <div class="flex border-b border-amber-200">
+          <button id="tab-reservations" class="admin-tab flex-1 py-4 px-6 text-center font-bold text-amber-900 border-b-4 border-amber-500 active" onclick="switchAdminTab('reservations')">
+            <i class="fas fa-calendar-check mr-2"></i>Réservations
+          </button>
+          <button id="tab-orders" class="admin-tab flex-1 py-4 px-6 text-center font-bold text-amber-600 border-b-4 border-transparent" onclick="switchAdminTab('orders')">
+            <i class="fas fa-shopping-bag mr-2"></i>Commandes
+          </button>
+        </div>
+
+        <!-- Reservations Tab -->
+        <div id="reservations-tab-content" class="admin-tab-content">
+          <div id="reservations-list" class="divide-y divide-amber-100">
+            <div class="p-12 text-center text-amber-600">
+              <i class="fas fa-calendar-times text-6xl mb-4 opacity-50"></i>
+              <p class="text-2xl font-semibold">Aucune réservation pour le moment</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Orders Tab -->
+        <div id="orders-tab-content" class="admin-tab-content hidden">
+          <div class="p-8">
+            <!-- Orders Summary -->
+            <div class="grid md:grid-cols-2 gap-6 mb-8">
+              <div class="bg-blue-50 rounded-2xl p-6">
+                <p class="text-blue-600 text-sm font-semibold">Total des commandes</p>
+                <p id="admin-total-orders" class="text-4xl font-bold text-blue-700">0</p>
+              </div>
+              <div class="bg-green-50 rounded-2xl p-6">
+                <p class="text-green-600 text-sm font-semibold">Montant total</p>
+                <p id="admin-total-amount" class="text-4xl font-bold text-green-700">0€</p>
+              </div>
+            </div>
+
+            <!-- Orders List -->
+            <div id="orders-list-container" class="space-y-6">
+              <div class="text-center text-amber-600 py-12">
+                <i class="fas fa-inbox text-6xl mb-4 opacity-50"></i>
+                <p class="text-2xl font-semibold">Aucune commande pour le moment</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>

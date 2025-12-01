@@ -1,5 +1,7 @@
 // Menu data loaded from MongoDB via API
-let menuData = {};
+export let menuData = {};
+
+import { addToCart } from './cart.js';
 
 export async function initMenuPage() {
   // Fetch menu from MongoDB via API (no fallback to local data)
@@ -33,6 +35,8 @@ export async function initMenuPage() {
 
   window.showMenuDetail = showMenuDetail;
   window.closeMenuModal = closeMenuModal;
+  window.addToCart = addToCart;
+  window.menuData = menuData;
 
   return {};
 }
@@ -57,7 +61,12 @@ function showMenuDetail(category) {
               <h4 class="text-2xl font-bold text-amber-900 mb-3">${item.name}</h4>
               <p class="text-amber-700 text-lg leading-relaxed">${item.description}</p>
             </div>
-            <div class="text-3xl font-bold text-amber-600 ml-6">${item.price}</div>
+            <div class="flex flex-col items-end ml-6">
+              <div class="text-3xl font-bold text-amber-600">${item.price}</div>
+              <button class="add-to-cart-btn mt-2 bg-amber-500 hover:bg-amber-600 text-white rounded-full w-10 h-10 flex items-center justify-center text-2xl" title="Ajouter au panier" onclick="addToCart('${category}', ${index})">
+                <i class="fas fa-plus"></i>
+              </button>
+            </div>
           </div>
         </div>
       `

@@ -6,6 +6,9 @@ import { initAdminPage } from './pages_js/admin.js';
 import { initLoginPage } from './pages_js/login.js';
 import { initRegisterPage } from './pages_js/register.js';
 import { initUserDashboard } from './pages_js/user_dashboard.js';
+import { initCartUI } from './pages_js/cart.js';
+import { initCheckoutPage, showCheckout } from './pages_js/checkout.js';
+import { initOrdersPage } from './pages_js/orders.js';
 
 const defaultConfig = {
   restaurant_name: 'Le Gourmet Parisien',
@@ -60,12 +63,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   const navbarApi = initNavbar(appState);
   initHomePage(appState);
+  await initCartUI();
   await initMenuPage(appState);
   const reservationApi = initReservationPage(appState);
   const adminApi = initAdminPage(appState);
   const loginApi = initLoginPage(appState);
   const registerApi = initRegisterPage(appState);
   const userDashboardApi = initUserDashboard(appState);
+  await initCheckoutPage();
+  await initOrdersPage(appState);
 
   appState.updateReservationsList = adminApi.updateReservationsList;
   appState.updateStatistics = adminApi.updateStatistics;
@@ -107,7 +113,25 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (reservationApi?.focusDefault) {
     reservationApi.focusDefault();
   }
+
+  // Handle hash-based routing for checkout and orders pages
+  window.addEventListener('hashchange', handleRouteChange);
+  handleRouteChange();
 });
+
+function handleRouteChange() {
+  const hash = window.location.hash.slice(1);
+
+  if (hash === 'checkout') {
+    if (typeof showCheckout === 'function') {
+      showCheckout();
+    }
+  } else if (hash === 'orders') {
+    if (typeof window.showPage === 'function') {
+      window.showPage('orders');
+    }
+  }
+}
 
 async function loadSections() {
   const sections = [
@@ -118,7 +142,10 @@ async function loadSections() {
     { id: 'admin-container', file: 'pages/admin.html' },
     { id: 'login-container', file: 'pages/login.html' },
     { id: 'register-container', file: 'pages/register.html' },
-    { id: 'user-dashboard-container', file: 'pages/user-dashboard.html' }
+    { id: 'user-dashboard-container', file: 'pages/user-dashboard.html' },
+    { id: 'pages-container', file: 'pages/orders.html', insertInside: true },
+    { id: 'pages-container', file: 'pages/checkout.html', insertInside: true },
+    { id: 'app', file: 'pages/cart.html', insertInside: true }
   ];
 
   await Promise.all(
@@ -129,7 +156,17 @@ async function loadSections() {
       try {
         const response = await fetch(section.file);
         if (!response.ok) throw new Error('Impossible de charger ' + section.file);
-        container.innerHTML = await response.text();
+        const html = await response.text();
+        if (section.insertInside) {
+          // Append to the container
+          const tempDiv = document.createElement('div');
+          tempDiv.innerHTML = html;
+          while (tempDiv.firstChild) {
+            container.appendChild(tempDiv.firstChild);
+          }
+        } else {
+          container.innerHTML = html;
+        }
       } catch (error) {
         container.innerHTML = `<div class="p-8 text-red-600 font-semibold">${error.message}</div>`;
         console.error(error);
