@@ -1,74 +1,96 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const MenuItem = require('../models/MenuItem');
-const jwt = require('jsonwebtoken');
-const JWT_SECRET = process.env.JWT_SECRET || 'change_this_secret';
+const MenuItem = require("../models/MenuItem");
+const jwt = require("jsonwebtoken");
+const JWT_SECRET = process.env.JWT_SECRET || "change_this_secret";
 
 // public: get menu grouped by category
-router.get('/', async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const items = await MenuItem.find().sort({ createdAt: 1 });
     // group
     const grouped = items.reduce((acc, item) => {
-      if (!acc[item.category]) acc[item.category] = { title: item.category, items: [] };
-      acc[item.category].items.push({ name: item.name, description: item.description, price: item.price });
+      if (!acc[item.category])
+        acc[item.category] = { title: item.category, items: [] };
+      acc[item.category].items.push({
+        name: item.name,
+        description: item.description,
+        price: item.price,
+      });
       return acc;
     }, {});
     res.json(grouped);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Server error' });
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// admin: get all menu items with full details including _id
+router.get("/all", verifyToken, async (req, res) => {
+  try {
+    if (req.user.role !== "admin")
+      return res.status(403).json({ error: "Forbidden" });
+    const items = await MenuItem.find().sort({ createdAt: 1 });
+    res.json(items);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
   }
 });
 
 // admin: add menu item
 function verifyToken(req, res, next) {
   const auth = req.headers.authorization;
-  if (!auth) return res.status(401).json({ error: 'Unauthorized' });
-  const token = auth.replace('Bearer ', '');
+  if (!auth) return res.status(401).json({ error: "Unauthorized" });
+  const token = auth.replace("Bearer ", "");
   try {
     req.user = jwt.verify(token, JWT_SECRET);
     next();
   } catch (err) {
-    return res.status(401).json({ error: 'Invalid token' });
+    return res.status(401).json({ error: "Invalid token" });
   }
 }
 
-
 // Add menu item (admin)
-router.post('/', verifyToken, async (req, res) => {
+router.post("/", verifyToken, async (req, res) => {
   try {
-    if (req.user.role !== 'admin') return res.status(403).json({ error: 'Forbidden' });
+    if (req.user.role !== "admin")
+      return res.status(403).json({ error: "Forbidden" });
     const item = new MenuItem(req.body);
     await item.save();
     res.json({ isOk: true, item });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ isOk: false, error: 'Server error' });
+    res.status(500).json({ isOk: false, error: "Server error" });
   }
 });
 
 // Update menu item (admin)
-router.patch('/:id', verifyToken, async (req, res) => {
+router.patch("/:id", verifyToken, async (req, res) => {
   try {
-    if (req.user.role !== 'admin') return res.status(403).json({ error: 'Forbidden' });
-    const updated = await MenuItem.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (req.user.role !== "admin")
+      return res.status(403).json({ error: "Forbidden" });
+    const updated = await MenuItem.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
     res.json({ isOk: true, item: updated });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ isOk: false, error: 'Server error' });
+    res.status(500).json({ isOk: false, error: "Server error" });
   }
 });
 
 // Delete menu item (admin)
-router.delete('/:id', verifyToken, async (req, res) => {
+router.delete("/:id", verifyToken, async (req, res) => {
   try {
-    if (req.user.role !== 'admin') return res.status(403).json({ error: 'Forbidden' });
+    if (req.user.role !== "admin")
+      return res.status(403).json({ error: "Forbidden" });
     await MenuItem.findByIdAndDelete(req.params.id);
     res.json({ isOk: true });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ isOk: false, error: 'Server error' });
+    res.status(500).json({ isOk: false, error: "Server error" });
   }
 });
 
