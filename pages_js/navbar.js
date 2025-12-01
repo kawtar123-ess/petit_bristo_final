@@ -1,5 +1,10 @@
 export function initNavbar(appState) {
   function showPage(pageId) {
+    // If navigating to admin, ensure user has admin role first
+    if (pageId === 'admin' && typeof window.ensureAdmin === 'function') {
+      const ok = window.ensureAdmin();
+      if (!ok) return; // ensureAdmin already redirected to login
+    }
     document.querySelectorAll('#pages-container .page').forEach((page) => {
       page.classList.add('hidden');
     });
@@ -12,17 +17,39 @@ export function initNavbar(appState) {
 
     appState.currentPage = pageId;
 
+    // clear active state
     document.querySelectorAll('#navbar-container .nav-btn').forEach((btn) => {
       btn.classList.remove('active');
     });
 
-    const activeBtn = document.querySelector(`#navbar-container button[onclick="showPage('${pageId}')"]`);
-    if (activeBtn) {
-      activeBtn.classList.add('active');
+    // Prefer data-page attribute (works with dynamic handlers)
+    const activeBtn = document.querySelector(`#navbar-container button[data-page="${pageId}"]`) || document.querySelector(`#navbar-container button[onclick="showPage('${pageId}')"]`);
+    if (activeBtn) activeBtn.classList.add('active');
+
+    // If mobile menu is open, hide it after navigation
+    const menu = document.getElementById('navbar-menu');
+    if (menu && menu.classList.contains('block')) {
+      menu.classList.remove('block');
+      menu.classList.add('hidden');
     }
   }
 
   window.showPage = showPage;
+  // mobile toggle
+  const toggle = document.getElementById('navbar-toggle');
+  if (toggle) {
+    toggle.addEventListener('click', () => {
+      const menu = document.getElementById('navbar-menu');
+      if (!menu) return;
+      if (menu.classList.contains('hidden')) {
+        menu.classList.remove('hidden');
+        menu.classList.add('block');
+      } else {
+        menu.classList.remove('block');
+        menu.classList.add('hidden');
+      }
+    });
+  }
   function updateUserState() {
     const token = localStorage.getItem('restaurant_token');
     const userEmail = localStorage.getItem('restaurant_user_email') || '';
@@ -97,8 +124,13 @@ export function initNavbar(appState) {
     } else {
       // Not logged in: show login and remove user area
       if (homeBtn) homeBtn.style.display = '';
+      if (reservationBtn) reservationBtn.style.display = '';
       loginBtn.innerHTML = `<i class="fas fa-cog mr-2"></i>login`;
+      // restore onclick attribute and property to navigate to login page
       loginBtn.setAttribute('onclick', "showPage('login')");
+      loginBtn.onclick = () => {
+        if (typeof window.showPage === 'function') window.showPage('login');
+      };
       const ua = document.getElementById('navbar-user-area');
       if (ua) ua.remove();
     }

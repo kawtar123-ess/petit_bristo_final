@@ -1,12 +1,14 @@
 export function initAdminPage(appState) {
-  // Redirige si non admin
-  setTimeout(() => {
+  // expose a guard function that redirects to login when access to admin is attempted
+  window.ensureAdmin = function () {
     const role = localStorage.getItem('restaurant_user_role');
     if (role !== 'admin') {
       window.showToast('Accès réservé à l\'administration.', 'error');
       if (typeof window.showPage === 'function') window.showPage('login');
+      return false;
     }
-  }, 100);
+    return true;
+  };
   function updateReservationsList() {
     const container = document.getElementById('reservations-list');
     if (!container) {
