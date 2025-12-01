@@ -69,20 +69,15 @@ export function initNavbar(appState) {
     const navArea = loginBtn.parentNode;
 
     if (token) {
+      // Hide login button when user is connected
+      if (loginBtn) loginBtn.style.display = "none";
+
       // Admin-specific behavior
       if (role === "admin") {
         // hide Home, Menu, and Reservation buttons for admins
         if (homeBtn) homeBtn.style.display = "none";
         if (menuBtn) menuBtn.style.display = "none";
         if (reservationBtn) reservationBtn.style.display = "none";
-
-        // make login button the single Admin tab (with icon)
-        loginBtn.innerHTML = `<i class="fas fa-user-shield mr-2"></i>Admin`;
-        loginBtn.removeAttribute("onclick");
-        // ensure clicking it shows admin page
-        loginBtn.onclick = () => {
-          if (typeof window.showPage === "function") window.showPage("admin");
-        };
 
         // ensure user area exists and contains Orders tab + Logout for admin
         let userArea = document.getElementById("navbar-user-area");
@@ -119,8 +114,7 @@ export function initNavbar(appState) {
         if (menuBtn) menuBtn.style.display = "";
         if (reservationBtn) reservationBtn.style.display = "";
 
-        loginBtn.innerHTML = `<i class="fas fa-user mr-2"></i>${userEmail}`;
-        loginBtn.removeAttribute("onclick");
+        // Login button is already hidden above
 
         let userArea = document.getElementById("navbar-user-area");
         if (!userArea) {
@@ -159,6 +153,7 @@ export function initNavbar(appState) {
       if (homeBtn) homeBtn.style.display = "";
       if (menuBtn) menuBtn.style.display = "";
       if (reservationBtn) reservationBtn.style.display = "";
+      if (loginBtn) loginBtn.style.display = "";
       loginBtn.innerHTML = `<i class="fas fa-cog mr-2"></i>login`;
       // restore onclick attribute and property to navigate to login page
       loginBtn.setAttribute("onclick", "showPage('login')");
