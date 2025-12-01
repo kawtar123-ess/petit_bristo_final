@@ -1,0 +1,92 @@
+[
+  {
+    "_id": "692da66eda805436f6342832",
+    "category": "entrees",
+    "name": "Foie gras mi-cuit aux figues",
+    "description": "Foie gras de canard, compotée de figues, brioche dorée",
+    "price": "24€",
+    "createdAt": "2025-12-01T14:30:06.871Z",
+    "__v": 0
+  },
+  {
+    "_id": "692da66eda805436f6342833",
+    "category": "entrees",
+    "name": "Saint-Jacques snackées",
+    "description": "Noix de Saint-Jacques, purée de topinambour, caviar d'Aquitaine",
+    "price": "28€",
+    "createdAt": "2025-12-01T14:30:06.872Z",
+    "__v": 0
+  },
+  {
+    "_id": "692da66eda805436f6342834",
+    "category": "entrees",
+    "name": "Tartare de thon rouge",
+    "description": "Thon rouge de ligne, avocat, wasabi, sésame noir",
+    "price": "22€",
+    "createdAt": "2025-12-01T14:30:06.872Z",
+    "__v": 0
+  },
+  {
+    "_id": "692da66eda805436f6342835",
+    "category": "plats",
+    "name": "Bœuf de Kobé grillé",
+    "description": "Filet de bœuf de Kobé, jus au vin rouge, légumes de saison",
+    "price": "65€",
+    "createdAt": "2025-12-01T14:30:06.872Z",
+    "__v": 0
+  },
+  {
+    "_id": "692da66eda805436f6342836",
+    "category": "plats",
+    "name": "Homard bleu thermidor",
+    "description": "Homard breton, sauce thermidor, riz pilaf aux herbes",
+    "price": "48€",
+    "createdAt": "2025-12-01T14:30:06.872Z",
+    "__v": 0
+  },
+  {
+    "_id": "692da66eda805436f6342837",
+    "category": "plats",
+    "name": "Pigeon en croûte de sel",
+    "description": "Pigeon fermier, croûte aux herbes, jus corsé",
+    "price": "42€",
+    "createdAt": "2025-12-01T14:30:06.872Z",
+    "__v": 0
+  },
+  {
+    "_id": "692da66eda805436f6342838",
+    "category": "desserts",
+    "name": "Soufflé au Grand Marnier",
+    "description": "Soufflé chaud, glace vanille Bourbon, tuile aux amandes",
+    "price": "16€",
+    "createdAt": "2025-12-01T14:30:06.872Z",
+    "__v": 0
+  },
+  {
+    "_id": "692da66eda805436f6342839",
+    "category": "desserts",
+    "name": "Tarte au chocolat Valrhona",
+    "description": "Chocolat noir 70%, ganache onctueuse, or comestible",
+    "price": "14€",
+    "createdAt": "2025-12-01T14:30:06.872Z",
+    "__v": 0
+  },
+  {
+    "_id": "692da66eda805436f634283a",
+    "category": "boissons",
+    "name": "Champagne Dom Pérignon",
+    "description": "Millésime 2012, bulles fines et persistantes",
+    "price": "280€",
+    "createdAt": "2025-12-01T14:30:06.873Z",
+    "__v": 0
+  },
+  {
+    "_id": "692da66eda805436f634283b",
+    "category": "boissons",
+    "name": "Bordeaux Pauillac",
+    "description": "Château Lafite Rothschild 2015",
+    "price": "450€",
+    "createdAt": "2025-12-01T14:30:06.873Z",
+    "__v": 0
+  }
+]
