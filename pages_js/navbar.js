@@ -42,17 +42,17 @@ export function initNavbar(appState) {
         if (icon) icon.classList.replace("fa-times", "fa-bars");
       }
     }
-    
+
     // Sync nav button states
     syncNavButtons(pageId);
   }
 
   window.showPage = showPage;
-  
+
   // Mobile toggle functionality
   const toggle = document.getElementById("navbar-toggle");
   const mobileMenu = document.getElementById("navbar-mobile-menu");
-  
+
   if (toggle && mobileMenu) {
     toggle.addEventListener("click", () => {
       const isHidden = mobileMenu.classList.contains("hidden");
@@ -67,16 +67,20 @@ export function initNavbar(appState) {
       }
     });
   }
-  
+
   // Sync mobile and desktop nav buttons
   const syncNavButtons = (pageId) => {
     document.querySelectorAll("#navbar-container .nav-btn").forEach((btn) => {
       btn.classList.remove("active");
     });
-    
-    const desktopBtn = document.querySelector(`#navbar-menu button[data-page="${pageId}"]`);
-    const mobileBtn = document.querySelector(`#navbar-mobile-menu button[data-page="${pageId}"]`);
-    
+
+    const desktopBtn = document.querySelector(
+      `#navbar-menu button[data-page="${pageId}"]`
+    );
+    const mobileBtn = document.querySelector(
+      `#navbar-mobile-menu button[data-page="${pageId}"]`
+    );
+
     if (desktopBtn) desktopBtn.classList.add("active");
     if (mobileBtn) mobileBtn.classList.add("active");
   };
@@ -84,23 +88,25 @@ export function initNavbar(appState) {
     const token = localStorage.getItem("restaurant_token");
     const userEmail = localStorage.getItem("restaurant_user_email") || "";
     const role = localStorage.getItem("restaurant_user_role") || "";
-    
+
     // Get both desktop and mobile login buttons
     const loginBtn = document.getElementById("login-btn");
     const loginBtnMobile = document.getElementById("login-btn-mobile");
-    
+
     if (!loginBtn) return;
-    
+
     // find main nav buttons (desktop)
     const homeBtn = document.getElementById("home-btn");
     const menuBtn = document.getElementById("menu-btn");
     const reservationBtn = document.getElementById("reservation-btn");
-    
+
     // find mobile nav buttons
     const homeBtnMobile = document.getElementById("home-btn-mobile");
     const menuBtnMobile = document.getElementById("menu-btn-mobile");
-    const reservationBtnMobile = document.getElementById("reservation-btn-mobile");
-    
+    const reservationBtnMobile = document.getElementById(
+      "reservation-btn-mobile"
+    );
+
     const navArea = loginBtn.parentNode;
 
     if (token) {
@@ -156,7 +162,9 @@ export function initNavbar(appState) {
 
         // Event listeners for admin buttons
         const adminOrdersBtn = document.getElementById("admin-orders-btn");
-        const adminOrdersBtnMobile = document.getElementById("admin-orders-btn-mobile");
+        const adminOrdersBtnMobile = document.getElementById(
+          "admin-orders-btn-mobile"
+        );
         const logoutBtn = document.getElementById("logout-btn");
         const logoutBtnMobile = document.getElementById("logout-btn-mobile");
 
@@ -253,8 +261,10 @@ export function initNavbar(appState) {
         const myResBtn = document.getElementById("my-res-btn");
         const myResBtnMobile = document.getElementById("my-res-btn-mobile");
         const myOrdersBtn = document.getElementById("my-orders-btn");
-        const myOrdersBtnMobile = document.getElementById("my-orders-btn-mobile");
-        
+        const myOrdersBtnMobile = document.getElementById(
+          "my-orders-btn-mobile"
+        );
+
         if (myOrdersBtn) {
           myOrdersBtn.addEventListener("click", () => {
             if (typeof window.showPage === "function")
@@ -263,7 +273,7 @@ export function initNavbar(appState) {
               window.displayUserOrders();
           });
         }
-        
+
         if (myOrdersBtnMobile) {
           myOrdersBtnMobile.addEventListener("click", () => {
             if (typeof window.showPage === "function")
@@ -272,27 +282,27 @@ export function initNavbar(appState) {
               window.displayUserOrders();
           });
         }
-        
+
         if (myResBtn) {
           myResBtn.addEventListener("click", () => {
             if (typeof window.showPage === "function")
               window.showPage("user-dashboard");
           });
         }
-        
+
         if (myResBtnMobile) {
           myResBtnMobile.addEventListener("click", () => {
             if (typeof window.showPage === "function")
               window.showPage("user-dashboard");
           });
         }
-        
+
         if (logoutBtn) {
           logoutBtn.addEventListener("click", () => {
             window.logout();
           });
         }
-        
+
         if (logoutBtnMobile) {
           logoutBtnMobile.addEventListener("click", () => {
             window.logout();
@@ -307,7 +317,7 @@ export function initNavbar(appState) {
       if (homeBtnMobile) homeBtnMobile.style.display = "";
       if (menuBtnMobile) menuBtnMobile.style.display = "";
       if (reservationBtnMobile) reservationBtnMobile.style.display = "";
-      
+
       if (loginBtn) {
         loginBtn.style.display = "";
         loginBtn.innerHTML = `<i class="fas fa-sign-in-alt mr-2"></i><span>Connexion</span>`;
@@ -316,7 +326,7 @@ export function initNavbar(appState) {
           if (typeof window.showPage === "function") window.showPage("login");
         };
       }
-      
+
       if (loginBtnMobile) {
         loginBtnMobile.style.display = "";
         loginBtnMobile.innerHTML = `<i class="fas fa-sign-in-alt mr-3 w-5"></i><span>Connexion</span>`;
@@ -325,10 +335,10 @@ export function initNavbar(appState) {
           if (typeof window.showPage === "function") window.showPage("login");
         };
       }
-      
+
       const ua = document.getElementById("navbar-user-area");
       if (ua) ua.remove();
-      
+
       const uaMobile = document.getElementById("navbar-user-area-mobile");
       if (uaMobile) uaMobile.innerHTML = "";
     }
