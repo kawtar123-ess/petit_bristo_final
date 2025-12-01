@@ -4,6 +4,8 @@ import { initMenuPage } from './pages_js/menu.js';
 import { initReservationPage } from './pages_js/reservation.js';
 import { initAdminPage } from './pages_js/admin.js';
 import { initLoginPage } from './pages_js/login.js';
+import { initRegisterPage } from './pages_js/register.js';
+import { initUserDashboard } from './pages_js/user_dashboard.js';
 
 const defaultConfig = {
   restaurant_name: 'Le Gourmet Parisien',
@@ -62,6 +64,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   const reservationApi = initReservationPage(appState);
   const adminApi = initAdminPage(appState);
   const loginApi = initLoginPage(appState);
+  const registerApi = initRegisterPage(appState);
+  const userDashboardApi = initUserDashboard(appState);
 
   appState.updateReservationsList = adminApi.updateReservationsList;
   appState.updateStatistics = adminApi.updateStatistics;
@@ -105,7 +109,9 @@ async function loadSections() {
     { id: 'menu-container', file: 'pages/menu.html' },
     { id: 'reservation-container', file: 'pages/reservation.html' },
     { id: 'admin-container', file: 'pages/admin.html' },
-    { id: 'login-container', file: 'pages/login.html' }
+    { id: 'login-container', file: 'pages/login.html' },
+    { id: 'register-container', file: 'pages/register.html' },
+    { id: 'user-dashboard-container', file: 'pages/user-dashboard.html' }
   ];
 
   await Promise.all(

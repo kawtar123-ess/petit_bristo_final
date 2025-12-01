@@ -42,8 +42,15 @@ export function initNavbar(appState) {
         userArea.className = 'flex items-center ml-4';
         loginBtn.parentNode.appendChild(userArea);
       }
-      userArea.innerHTML = `<button id="logout-btn" class="btn-secondary px-4 py-2 rounded-xl text-white font-semibold">Se déconnecter</button>`;
+      // insert mes-reservations button + logout
+      userArea.innerHTML = `<button id="my-res-btn" class="nav-btn px-6 py-3 rounded-xl text-amber-800 hover:text-amber-600 font-semibold mr-4">Mes réservations</button><button id="logout-btn" class="btn-secondary px-4 py-2 rounded-xl text-white font-semibold">Se déconnecter</button>`;
       const logoutBtn = document.getElementById('logout-btn');
+      const myResBtn = document.getElementById('my-res-btn');
+      if (myResBtn) {
+        myResBtn.addEventListener('click', () => {
+          if (typeof window.showPage === 'function') window.showPage('user-dashboard');
+        });
+      }
       if (logoutBtn) {
         logoutBtn.addEventListener('click', () => {
           window.logout();

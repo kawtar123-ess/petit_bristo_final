@@ -63,7 +63,7 @@ export function initLoginPage(appState) {
             if (typeof window.showPage === 'function') window.showPage('admin');
             else window.location.href = 'index.html';
           } else {
-            if (typeof window.showPage === 'function') window.showPage('home');
+            if (typeof window.showPage === 'function') window.showPage('user-dashboard');
             else window.location.href = 'index.html';
           }
           // trigger navbar update
