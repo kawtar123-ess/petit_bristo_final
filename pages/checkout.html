@@ -1,0 +1,76 @@
+<div id="checkout-page" class="page hidden">
+  <section class="checkout-bg min-h-screen py-20">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-6xl font-bold text-gradient text-center mb-12 fade-in text-glow">Validation de Commande</h2>
+
+      <div class="grid md:grid-cols-3 gap-8">
+        <!-- Order Summary -->
+        <div class="md:col-span-2 bg-white rounded-3xl shadow-2xl p-8">
+          <h3 class="text-3xl font-bold text-amber-900 mb-6">Récapitulatif de votre commande</h3>
+          
+          <div id="checkout-items-list" class="space-y-6 mb-8">
+            <!-- Items will be inserted here -->
+          </div>
+
+          <!-- Notes Section -->
+          <div class="border-t-2 border-amber-200 pt-6">
+            <label class="block text-lg font-semibold text-amber-900 mb-3">Notes spéciales (optionnel)</label>
+            <textarea 
+              id="checkout-notes" 
+              class="w-full px-4 py-3 border-2 border-amber-200 rounded-lg focus:outline-none focus:border-amber-500 resize-none" 
+              rows="4" 
+              placeholder="Allergies, préférences culinaires, etc..."
+            ></textarea>
+          </div>
+        </div>
+
+        <!-- Order Details -->
+        <div class="bg-amber-50 rounded-3xl shadow-2xl p-8 h-fit sticky top-8">
+          <h3 class="text-2xl font-bold text-amber-900 mb-6">Détails de la commande</h3>
+
+          <div class="space-y-4 mb-8">
+            <div class="flex justify-between items-center pb-3 border-b border-amber-200">
+              <span class="text-amber-700">Nombre d'articles:</span>
+              <span id="checkout-item-count" class="font-semibold text-amber-900">0</span>
+            </div>
+            <div class="flex justify-between items-center pb-3 border-b border-amber-200">
+              <span class="text-amber-700">Sous-total:</span>
+              <span id="checkout-subtotal" class="font-semibold text-amber-900">0€</span>
+            </div>
+            <div class="flex justify-between items-center pb-3 border-b border-amber-200">
+              <span class="text-amber-700">Frais de service:</span>
+              <span class="font-semibold text-amber-900">Gratuit</span>
+            </div>
+            <div class="flex justify-between items-center text-xl font-bold bg-white rounded-lg p-4 mt-6">
+              <span class="text-amber-900">Total:</span>
+              <span id="checkout-total" class="text-amber-600">0€</span>
+            </div>
+          </div>
+
+          <!-- User Info -->
+          <div class="bg-white rounded-lg p-4 mb-6">
+            <p class="text-sm text-amber-600 mb-2">Commandé par:</p>
+            <p id="checkout-user-info" class="font-semibold text-amber-900"></p>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="space-y-3">
+            <button 
+              id="checkout-place-order-btn" 
+              class="w-full bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white py-3 rounded-xl font-bold text-lg transition-all duration-300 flex items-center justify-center gap-2"
+            >
+              <i class="fas fa-check-circle"></i>
+              Confirmer la commande
+            </button>
+            <button 
+              id="checkout-back-btn" 
+              class="w-full bg-gray-300 hover:bg-gray-400 text-gray-700 py-3 rounded-xl font-semibold transition-all duration-300"
+            >
+              <i class="fas fa-arrow-left mr-2"></i>Retour au panier
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

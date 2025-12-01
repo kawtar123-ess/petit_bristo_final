@@ -46,6 +46,9 @@ export function initLoginPage(appState) {
           return;
         }
 
+        // Debug: log the full data object returned from backend
+        console.log('[DEBUG] login.js: login response data =', data);
+
         // store token + role
         localStorage.setItem('restaurant_token', data.token);
         localStorage.setItem('restaurant_user_email', data.email);
@@ -59,11 +62,27 @@ export function initLoginPage(appState) {
         showMessage('success', 'Connexion réussie ! Redirection en cours...');
 
         setTimeout(() => {
-          if (data.role === 'admin') {
+          // Always store a valid user object with id
+          const userObj = {
+            id: data.userId || (data.user && data.user.id) || '',
+            email: data.email || '',
+            firstName: data.firstName || (data.user && data.user.firstName) || '',
+            lastName: data.lastName || (data.user && data.user.lastName) || '',
+            role: data.role || (data.user && data.user.role) || 'user'
+          };
+          console.log('[DEBUG] login.js: storing userObj =', userObj);
+          localStorage.setItem('restaurant_user', JSON.stringify(userObj));
+
+          // Check if user was trying to checkout
+          const checkoutInProgress = sessionStorage.getItem('checkout_in_progress');
+          if (checkoutInProgress === 'true') {
+            sessionStorage.removeItem('checkout_in_progress');
+            window.location.hash = '#checkout';
+          } else if (userObj.role === 'admin') {
             if (typeof window.showPage === 'function') window.showPage('admin');
             else window.location.href = 'index.html';
           } else {
-            if (typeof window.showPage === 'function') window.showPage('home');
+            if (typeof window.showPage === 'function') window.showPage('user-dashboard');
             else window.location.href = 'index.html';
           }
           // trigger navbar update

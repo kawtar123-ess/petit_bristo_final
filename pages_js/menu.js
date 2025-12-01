@@ -1,77 +1,27 @@
-const menuData = {
-  entrees: {
-    title: 'Entrées Raffinées',
-    items: [
-      { name: 'Foie gras mi-cuit aux figues', description: 'Foie gras de canard, compotée de figues, brioche dorée', price: '24€' },
-      { name: 'Saint-Jacques snackées', description: "Noix de Saint-Jacques, purée de topinambour, caviar d'Aquitaine", price: '28€' },
-      { name: 'Tartare de thon rouge', description: 'Thon rouge de ligne, avocat, wasabi, sésame noir', price: '22€' },
-      { name: 'Velouté de châtaignes', description: 'Crème de châtaignes, truffe noire, huile de noisette', price: '18€' }
-    ]
-  },
-  plats: {
-    title: 'Plats Signature',
-    items: [
-      { name: 'Bœuf de Kobé grillé', description: 'Filet de bœuf de Kobé, jus au vin rouge, légumes de saison', price: '65€' },
-      { name: 'Homard bleu thermidor', description: 'Homard breton, sauce thermidor, riz pilaf aux herbes', price: '48€' },
-      { name: 'Pigeon en croûte de sel', description: 'Pigeon fermier, croûte aux herbes, jus corsé', price: '42€' },
-      { name: 'Turbot sauvage', description: 'Filet de turbot, beurre blanc aux agrumes, légumes croquants', price: '38€' }
-    ]
-  },
-  desserts: {
-    title: 'Desserts Divins',
-    items: [
-      { name: 'Soufflé au Grand Marnier', description: 'Soufflé chaud, glace vanille Bourbon, tuile aux amandes', price: '16€' },
-      { name: 'Tarte au chocolat Valrhona', description: 'Chocolat noir 70%, ganache onctueuse, or comestible', price: '14€' },
-      { name: 'Mille-feuille revisité', description: 'Pâte feuilletée croustillante, crème diplomate, fruits rouges', price: '15€' },
-      { name: 'Baba au rhum', description: 'Baba artisanal, rhum vieux, chantilly vanillée', price: '13€' }
-    ]
-  },
-  boissons: {
-    title: 'Cave Exceptionnelle',
-    items: [
-      { name: 'Champagne Dom Pérignon', description: 'Millésime 2012, bulles fines et persistantes', price: '280€' },
-      { name: 'Bordeaux Pauillac', description: 'Château Lafite Rothschild 2015', price: '450€' },
-      { name: 'Bourgogne Gevrey-Chambertin', description: 'Domaine Armand Rousseau 2018', price: '180€' },
-      { name: 'Cocktails signature', description: 'Créations du chef barman, spiritueux premium', price: '18€-25€' }
-    ]
-  },
-  'menu-degustation': {
-    title: 'Menu Dégustation',
-    items: [
-      { name: 'Parcours Gastronomique', description: "7 services d'exception avec accords mets-vins", price: '95€' },
-      { name: 'Accord mets-vins', description: 'Sélection de 5 vins par notre sommelier', price: '+45€' },
-      { name: 'Menu végétarien', description: '7 services créatifs autour des légumes', price: '85€' }
-    ]
-  },
-  formules: {
-    title: 'Formules Gourmandes',
-    items: [
-      { name: 'Menu Découverte', description: 'Entrée + Plat + Dessert + Vin', price: '65€' },
-      { name: 'Menu Affaires', description: 'Formule déjeuner rapide et raffinée', price: '45€' },
-      { name: 'Menu Romantique', description: 'Dîner aux chandelles avec champagne', price: '120€' }
-    ]
-  }
-};
+// Menu data loaded from MongoDB via API
+export let menuData = {};
+
+import { addToCart } from './cart.js';
 
 export async function initMenuPage() {
-  // attempt to fetch menu from backend, fallback to local menuData
+  // Fetch menu from MongoDB via API (no fallback to local data)
   try {
     const res = await fetch('/api/menu');
-    if (res.ok) {
-      const serverMenu = await res.json();
-      // serverMenu is grouped by category
-      Object.keys(serverMenu).forEach((cat) => {
-        const group = serverMenu[cat];
-        // normalize key name for lookup in frontend
-        const key = cat;
-        menuData[key] = {
-          title: group.title || cat,
-          items: group.items || []
-        };
-      });
+    if (!res.ok) {
+      throw new Error(`API error: ${res.status}`);
     }
+    const serverMenu = await res.json();
+    // serverMenu is grouped by category from MongoDB
+    Object.keys(serverMenu).forEach((cat) => {
+      const group = serverMenu[cat];
+      menuData[cat] = {
+        title: group.title || cat.toUpperCase(),
+        items: group.items || []
+      };
+    });
   } catch (err) {
-    console.warn('Unable to fetch menu from API, using local menuData', err);
+    console.error('❌ Erreur lors du chargement du menu:', err);
+    window.showToast('❌ Impossible de charger le menu. Veuillez rafraîchir la page.', 'error');
   }
 
   const modal = document.getElementById('menu-modal');
@@ -85,6 +35,8 @@ export async function initMenuPage() {
 
   window.showMenuDetail = showMenuDetail;
   window.closeMenuModal = closeMenuModal;
+  window.addToCart = addToCart;
+  window.menuData = menuData;
 
   return {};
 }
@@ -109,7 +61,12 @@ function showMenuDetail(category) {
               <h4 class="text-2xl font-bold text-amber-900 mb-3">${item.name}</h4>
               <p class="text-amber-700 text-lg leading-relaxed">${item.description}</p>
             </div>
-            <div class="text-3xl font-bold text-amber-600 ml-6">${item.price}</div>
+            <div class="flex flex-col items-end ml-6">
+              <div class="text-3xl font-bold text-amber-600">${item.price}</div>
+              <button class="add-to-cart-btn mt-2 bg-amber-500 hover:bg-amber-600 text-white rounded-full w-10 h-10 flex items-center justify-center text-2xl" title="Ajouter au panier" onclick="addToCart('${category}', ${index})">
+                <i class="fas fa-plus"></i>
+              </button>
+            </div>
           </div>
         </div>
       `

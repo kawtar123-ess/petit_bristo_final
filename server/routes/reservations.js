@@ -16,15 +16,29 @@ function verifyToken(req, res, next) {
   }
 }
 
-// create reservation (public)
-router.post('/', async (req, res) => {
+// create reservation (authenticated users only)
+router.post('/', verifyToken, async (req, res) => {
   try {
-    const r = new Reservation(req.body);
-    await r.save();
-    res.json({ isOk: true, reservation: r });
+    const body = req.body || {};
+    // prefer user info from token when available
+    if (!body.customerEmail && req.user && req.user.email) body.customerEmail = req.user.email;
+    const newReservation = new Reservation({ ...body, user: req.user.userId });
+    await newReservation.save();
+    res.json({ isOk: true, reservation: newReservation });
   } catch (err) {
     console.error(err);
     res.status(500).json({ isOk: false, error: 'Server error' });
+  }
+});
+
+// list current user's reservations
+router.get('/mine', verifyToken, async (req, res) => {
+  try {
+    const items = await Reservation.find({ user: req.user.userId }).sort({ createdAt: -1 });
+    res.json(items);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
   }
 });
 

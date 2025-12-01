@@ -6,11 +6,9 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "init-admin": "node scripts/init-admin.js",
-    "view-data": "node scripts/view-data.js",
-    "seed-menu": "node scripts/seed-menu.js",
-    "seed-menu:force": "node scripts/seed-menu.js --force",
-    "test-api": "node scripts/test-api.js"
+    "export-json": "node scripts/export-json.js",
+    "import-json": "node scripts/import-json.js",
+    "check-db": "node check-db.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

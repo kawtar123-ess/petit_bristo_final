@@ -46,9 +46,16 @@ async function handleReservationSubmit(event, appState) {
   };
 
   try {
+    const token = localStorage.getItem('restaurant_token');
+    if (!token) {
+      window.showToast('Veuillez vous connecter ou créer un compte pour réserver.', 'error');
+      if (typeof window.showPage === 'function') window.showPage('login');
+      return resetButtonState(submitButton, submitText, submitSpinner);
+    }
+
     const res = await fetch('/api/reservations', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
       body: JSON.stringify(formData)
     });
     const json = await res.json();

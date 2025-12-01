@@ -452,6 +452,28 @@ body {
   }
 }
 
+/* === ADMIN TABS === */
+.admin-tab {
+  transition: all 0.3s ease;
+}
+
+.admin-tab:hover {
+  background: rgba(245, 158, 11, 0.05);
+}
+
+.admin-tab.active {
+  border-bottom-color: #f59e0b !important;
+  color: #b45309 !important;
+}
+
+.admin-tab-content {
+  transition: all 0.3s ease;
+}
+
+.admin-tab-content.hidden {
+  display: none;
+}
+
 /* === SCROLLBAR PERSONNALISÉE === */
 ::-webkit-scrollbar {
   width: 8px;

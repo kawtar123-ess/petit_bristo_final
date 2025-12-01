@@ -9,6 +9,7 @@ const cors = require('cors');
 const authRoutes = require('./server/routes/auth');
 const reservationRoutes = require('./server/routes/reservations');
 const menuRoutes = require('./server/routes/menu');
+const orderRoutes = require('./server/routes/orders');
 
 const app = express();
 app.use(cors());
@@ -26,6 +27,7 @@ mongoose
 app.use('/api/auth', authRoutes);
 app.use('/api/reservations', reservationRoutes);
 app.use('/api/menu', menuRoutes);
+app.use('/api/orders', orderRoutes);
 
 // Serve static front-end files
 app.use(express.static(path.join(__dirname)));

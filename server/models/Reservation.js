@@ -5,6 +5,7 @@ const ReservationSchema = new Schema({
   customerName: String,
   customerEmail: String,
   customerPhone: String,
+  user: { type: Schema.Types.ObjectId, ref: 'User', required: false },
   date: String,
   time: String,
   guests: Number,

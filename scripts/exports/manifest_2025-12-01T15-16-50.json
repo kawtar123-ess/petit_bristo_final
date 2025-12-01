@@ -1,0 +1,24 @@
+{
+  "exportedAt": "2025-12-01T15:16:51.483Z",
+  "mongodbUri": "mongodb+srv://student:****@cluster0.linattv.mongodb.net/petit_bristo?retryWrites=true&w=majority",
+  "collections": [
+    {
+      "name": "users",
+      "file": "users_2025-12-01T15-16-50.json"
+    },
+    {
+      "name": "reservations",
+      "file": "reservations_2025-12-01T15-16-50.json"
+    },
+    {
+      "name": "menuitems",
+      "file": "menuitems_2025-12-01T15-16-50.json"
+    }
+  ],
+  "note": "These JSON files are snapshots of MongoDB collections. Use import-json.js to reimport or process them.",
+  "usage": {
+    "import": "npm run import-json",
+    "view": "cat scripts/exports/<filename>",
+    "mongoimport": "mongoimport --uri=\"mongodb+srv://student:mongo123@cluster0.linattv.mongodb.net/petit_bristo?retryWrites=true&w=majority\" --collection=<name> --file=scripts/exports/<filename> --jsonArray"
+  }
+}

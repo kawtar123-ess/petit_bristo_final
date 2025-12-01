@@ -1,0 +1,15 @@
+[
+  {
+    "_id": "692da193c9917d77f9d8a81d",
+    "customerName": "test",
+    "customerEmail": "hello@gmail.com",
+    "customerPhone": "12345678",
+    "date": "2026-01-09",
+    "time": "19:00",
+    "guests": 4,
+    "specialRequests": "hahah",
+    "status": "pending",
+    "createdAt": "2025-12-01T14:09:23.667Z",
+    "__v": 0
+  }
+]

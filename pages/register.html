@@ -1,0 +1,42 @@
+<div id="register-page" class="page hidden">
+  <section class="min-h-screen flex items-center justify-center px-4 py-20 bg-gradient-to-br from-amber-50 to-orange-100">
+    <div class="w-full max-w-md bg-white rounded-2xl shadow-2xl p-8 space-y-6">
+      <div class="text-center">
+        <div class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-tr from-orange-400 via-red-500 to-pink-500 shadow-lg mx-auto">
+          <i class="fa-solid fa-user-plus text-2xl text-white"></i>
+        </div>
+        <h1 class="text-2xl font-bold mt-4 text-amber-900">Créer un compte</h1>
+        <p class="text-sm text-amber-700/80">Créez un compte pour gérer vos réservations.</p>
+      </div>
+
+      <div id="register-message" class="hidden text-sm rounded-lg px-3 py-2"></div>
+
+      <form id="register-form" class="space-y-4">
+        <div>
+          <label for="reg-email" class="text-sm font-medium text-amber-800">Adresse e-mail</label>
+          <div class="flex items-center gap-2 border rounded-xl px-3 py-2 mt-2">
+            <i class="fa-solid fa-envelope text-orange-400"></i>
+            <input id="reg-email" type="email" required class="w-full bg-transparent outline-none text-sm" placeholder="exemple@restaurant.com" />
+          </div>
+        </div>
+
+        <div>
+          <label for="reg-password" class="text-sm font-medium text-amber-800">Mot de passe</label>
+          <div class="flex items-center gap-2 border rounded-xl px-3 py-2 mt-2">
+            <i class="fa-solid fa-lock text-orange-400"></i>
+            <input id="reg-password" type="password" minlength="6" required class="w-full bg-transparent outline-none text-sm" placeholder="Au moins 6 caractères" />
+          </div>
+        </div>
+
+        <button type="submit" class="w-full inline-flex items-center justify-center gap-2 bg-gradient-to-r from-orange-500 to-amber-500 text-white font-semibold rounded-xl py-2.5">
+          <span>Créer un compte</span>
+          <i class="fa-solid fa-arrow-right-long text-xs"></i>
+        </button>
+      </form>
+
+      <div class="text-center text-xs text-amber-700/80">
+        <p>Déjà un compte ? <button onclick="showPage('login')" class="font-semibold">Connexion</button></p>
+      </div>
+    </div>
+  </section>
+</div>

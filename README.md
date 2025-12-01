@@ -1,96 +1,102 @@
-# petit_bristo_nosql
+# 🍷 Petit Bistro - MongoDB Atlas Edition
 
-This project now includes a simple Node/Express backend with MongoDB (Mongoose) to provide APIs for authentication, reservations and menu management.
+Application web gastronomique avec backend Node.js + Express + MongoDB Atlas.
 
-Quick start (local):
+## 🚀 Démarrage rapide
 
-1. Install dependencies:
-
-```powershell
+### 1. Installer les dépendances
+```bash
 npm install
 ```
 
-2. Start MongoDB locally (or set `MONGODB_URI` env var). Example with a local MongoDB server.
-
-3. Create the initial admin user (one-time):
-
-```powershell
-npm run init-admin
+### 2. Configurer MongoDB Atlas
+Créez un fichier `.env` à la racine (ou utilisez le `.env` existant) :
+```
+MONGODB_URI=mongodb+srv://student:mongo123@cluster0.linattv.mongodb.net/petit_bristo?retryWrites=true&w=majority
+JWT_SECRET=change-this-secret
+PORT=4000
 ```
 
-Default admin credentials (can be changed via env vars):
-- Email: `admin@example.com`
-- Password: `Admin@123`
-
-You can override them with environment variables `ADMIN_EMAIL` and `ADMIN_PASSWORD` before running the `init-admin` script.
-
-4. Start the app (serves frontend + API):
-
-```powershell
-npm run dev   # requires nodemon
-# or
+### 3. Démarrer le serveur
+```bash
 npm start
 ```
+Visitez `http://localhost:4000`
 
-5. Open the app in the browser (http://localhost:4000 by default).
+## 📱 Fonctionnalités
 
-Notes:
-- Backend server is `server.js` and provides the API under `/api/*`.
-- For production, set `MONGODB_URI` and `JWT_SECRET` environment variables and use a process manager.
+✅ **Menu** - Chargé dynamiquement depuis MongoDB  
+✅ **Réservations** - Sauvegardées en base de données  
+✅ **Admin Dashboard** - Gérer les réservations en temps réel  
+✅ **Authentication** - JWT-based user login  
 
-API overview:
-- POST /api/auth/login { email, password } -> { token, role, email }
-- POST /api/reservations (public) -> create reservation
-- GET /api/reservations (admin only, requires Bearer token) -> list
-- PATCH /api/reservations/:id (admin only)
-- DELETE /api/reservations/:id (admin only)
-- GET /api/menu -> public menu grouped by category
+## 📦 Architecture
 
-Front-end changes:
-- `pages/login.html` and `pages_js/login.js` now call the backend login API and store a token in `localStorage`.
-- Navbar reacts to login state and shows logout button.
-- Admin users are redirected to the admin dashboard after login.
+```
+petit_bristo/
+├── server.js              # Serveur Express
+├── check-db.js            # Vérifier l'état de MongoDB
+├── .env                   # Variables d'environnement
+├── server/
+│   ├── models/            # Mongoose schemas (MenuItem, Reservation, User)
+│   └── routes/            # API endpoints (auth, menu, reservations)
+├── pages/                 # HTML pages
+├── pages_js/              # Frontend JS (modular)
+└── scripts/
+    ├── export-json.js     # Exporter collections en JSON
+    └── import-json.js     # Importer JSON en MongoDB
+```
 
-## Connexion à MongoDB Atlas (cloud)
+## 🛠️ Commandes disponibles
 
-Si vous préférez utiliser MongoDB Atlas (hébergé) au lieu d'une instance locale, suivez ces étapes :
+```bash
+npm start              # Démarrer le serveur
+npm run dev           # Démarrer avec nodemon (auto-reload)
+npm run check-db      # Vérifier l'état de MongoDB
+npm run export-json   # Exporter les données en JSON
+npm run import-json   # Importer JSON en MongoDB
+```
 
-1. Créez un compte sur https://www.mongodb.com/atlas et créez un nouveau cluster gratuit (ou payant).
-2. Dans le panneau Atlas, créez un **Database User** (username/password) avec les droits nécessaires.
-3. Autorisez votre adresse IP (ou 0.0.0.0/0 pour tester depuis n'importe où) dans **Network Access → IP Whitelist**.
-4. Dans **Connect → Connect Your Application**, copiez la chaîne de connexion **URI** (format `mongodb+srv://...`). Exemple :
+## 🔑 Credentials par défaut
 
-	 ```text
-	 mongodb+srv://<username>:<password>@cluster0.abcd.mongodb.net/petit_bristo?retryWrites=true&w=majority
-	 ```
+- **Admin Login**: `admin@example.com` / `Admin@123`
+- **Database**: `petit_bristo`
+- **Collections**: `users`, `reservations`, `menuitems`
 
-	 - Remplacez `<username>` et `<password>` par les identifiants du Database User créé.
-	 - `petit_bristo` est le nom de la base de données utilisée par l'application (vous pouvez le changer).
+## 📊 API Endpoints
 
-5. Définissez la variable d'environnement `MONGODB_URI` avant de démarrer le serveur.
+### Public
+- `GET /api/menu` - Récupérer le menu (groupé par catégorie)
+- `POST /api/reservations` - Créer une réservation
 
-	 - Exemple (PowerShell, session courante) :
+### Admin (authentification JWT requise)
+- `POST /api/auth/login` - Connexion admin
+- `GET /api/auth/me` - Vérifier la session
+- `GET /api/reservations` - Lister toutes les réservations
+- `PATCH /api/reservations/:id` - Modifier une réservation
+- `DELETE /api/reservations/:id` - Supprimer une réservation
+- `POST /api/menu` - Ajouter un article au menu
 
-		 ```powershell
-		 $env:MONGODB_URI = "mongodb+srv://<username>:<password>@cluster0.abcd.mongodb.net/petit_bristo?retryWrites=true&w=majority"
-		 $env:JWT_SECRET = "change-this-secret"
-		 npm start
-		 ```
+## 🗄️ MongoDB Compass (optionnel)
 
-	 - Exemple (PowerShell, persistant via `setx`) :
+Pour gérer visuellement :
+1. Téléchargez [MongoDB Compass](https://www.mongodb.com/try/download/compass)
+2. Collez l'URI depuis `.env`
+3. Naviguez vers base `petit_bristo` → collections
 
-		 ```powershell
-		 setx MONGODB_URI "mongodb+srv://<username>:<password>@cluster0.abcd.mongodb.net/petit_bristo?retryWrites=true&w=majority"
-		 setx JWT_SECRET "change-this-secret"
-		 # Ouvrez un nouveau terminal Powershell pour que les variables prennent effet
-		 npm start
-		 ```
+## 📝 Notes
 
-6. Redémarrez l'application (ou ouvrez un nouveau terminal si vous avez utilisé `setx`). Le serveur lit `MONGODB_URI` depuis l'environnement et se connectera à Atlas.
+- Tous les menus et réservations sont stockés **en base de données**
+- Les données sont **persistantes** et sauvegardées sur Atlas
+- JWT tokens expirent après 8 heures
+- Passwords sont **hashés** avec bcryptjs
 
-Remarques de sécurité :
-- Ne stockez pas de mots de passe en clair dans le code ni dans les dépôts. Utilisez des variables d'environnement ou un service secret manager.
-- Pour la production, définissez `JWT_SECRET` sur une valeur longue et aléatoire.
+## 🔒 Production
 
+Avant de déployer :
+1. Changez `JWT_SECRET` par une clé forte
+2. Utilisez des identifiants MongoDB sécurisés
+3. Restreignez l'accès à votre cluster Atlas (IP whitelist)
+4. Déployez sur un service comme Heroku, Railway, ou Render
 
 ``` 
