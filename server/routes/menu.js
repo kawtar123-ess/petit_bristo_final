@@ -34,12 +34,38 @@ function verifyToken(req, res, next) {
   }
 }
 
+
+// Add menu item (admin)
 router.post('/', verifyToken, async (req, res) => {
   try {
     if (req.user.role !== 'admin') return res.status(403).json({ error: 'Forbidden' });
     const item = new MenuItem(req.body);
     await item.save();
     res.json({ isOk: true, item });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ isOk: false, error: 'Server error' });
+  }
+});
+
+// Update menu item (admin)
+router.patch('/:id', verifyToken, async (req, res) => {
+  try {
+    if (req.user.role !== 'admin') return res.status(403).json({ error: 'Forbidden' });
+    const updated = await MenuItem.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    res.json({ isOk: true, item: updated });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ isOk: false, error: 'Server error' });
+  }
+});
+
+// Delete menu item (admin)
+router.delete('/:id', verifyToken, async (req, res) => {
+  try {
+    if (req.user.role !== 'admin') return res.status(403).json({ error: 'Forbidden' });
+    await MenuItem.findByIdAndDelete(req.params.id);
+    res.json({ isOk: true });
   } catch (err) {
     console.error(err);
     res.status(500).json({ isOk: false, error: 'Server error' });

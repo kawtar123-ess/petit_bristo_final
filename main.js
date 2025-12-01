@@ -83,6 +83,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         // normalize for frontend (add __backendId used in templates)
         appState.reservations = items.map((it) => ({ ...it, __backendId: it._id }));
         appState.filteredReservations = [...appState.reservations];
+        // If user is an admin, keep them on the admin page after reload
+        appState.currentPage = 'admin';
+        if (navbarApi?.showPage) {
+          navbarApi.showPage(appState.currentPage);
+        }
+        // make sure navbar reflects admin state (hide reservation, remove duplicate tabs)
+        if (window.updateUserState) window.updateUserState();
         if (appState.updateReservationsList) appState.updateReservationsList();
         if (appState.updateStatistics) appState.updateStatistics();
       }

@@ -1,4 +1,12 @@
 export function initAdminPage(appState) {
+  // Redirige si non admin
+  setTimeout(() => {
+    const role = localStorage.getItem('restaurant_user_role');
+    if (role !== 'admin') {
+      window.showToast('Accès réservé à l\'administration.', 'error');
+      if (typeof window.showPage === 'function') window.showPage('login');
+    }
+  }, 100);
   function updateReservationsList() {
     const container = document.getElementById('reservations-list');
     if (!container) {
@@ -196,6 +204,106 @@ export function initAdminPage(appState) {
   window.clearFilters = clearFilters;
   window.updateReservationStatus = updateReservationStatus;
   window.deleteReservation = deleteReservation;
+
+  // --- MENU CRUD ---
+  async function loadMenuItems() {
+    const token = localStorage.getItem('restaurant_token');
+    const container = document.getElementById('menu-items-list');
+    if (!container) return;
+    try {
+      const res = await fetch('/api/menu');
+      if (!res.ok) throw new Error('Erreur chargement menu');
+      const menuData = await res.json();
+      let rows = '';
+      let items = [];
+      Object.entries(menuData).forEach(([cat, group]) => {
+        if (group.items) {
+          group.items.forEach((item) => {
+            items.push({ ...item, category: cat });
+          });
+        }
+      });
+      if (items.length === 0) {
+        rows = '<tr><td colspan="5" class="text-center text-amber-600 py-8">Aucun plat</td></tr>';
+      } else {
+        rows = items.map((item, idx) => `
+          <tr>
+            <td class="px-4 py-2">${item.category}</td>
+            <td class="px-4 py-2">${item.name}</td>
+            <td class="px-4 py-2">${item.description}</td>
+            <td class="px-4 py-2">${item.price}</td>
+            <td class="px-4 py-2 space-x-2">
+              <button class="btn-secondary px-3 py-1 rounded" onclick="editMenuItem('${item.name}','${item.category}','${item.description}','${item.price}')"><i class="fas fa-edit"></i></button>
+              <button class="btn-danger px-3 py-1 rounded" onclick="deleteMenuItemPrompt('${item.name}','${item.category}')"><i class="fas fa-trash"></i></button>
+            </td>
+          </tr>
+        `).join('');
+      }
+      container.innerHTML = rows;
+    } catch (err) {
+      container.innerHTML = '<tr><td colspan="5" class="text-center text-amber-600 py-8">Erreur chargement menu</td></tr>';
+    }
+  }
+
+  async function addMenuItem(event) {
+    event.preventDefault();
+    const token = localStorage.getItem('restaurant_token');
+    if (!token) return window.showToast('Authentification requise', 'error');
+    const category = document.getElementById('menu-category').value;
+    const name = document.getElementById('menu-name').value;
+    const description = document.getElementById('menu-description').value;
+    const price = document.getElementById('menu-price').value;
+    try {
+      const res = await fetch('/api/menu', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ category, name, description, price })
+      });
+      if (!res.ok) throw new Error('Erreur ajout plat');
+      window.showToast('Plat ajouté', 'success');
+      document.getElementById('add-menu-form').reset();
+      loadMenuItems();
+    } catch (err) {
+      window.showToast('Erreur lors de l\'ajout', 'error');
+    }
+  }
+
+  window.editMenuItem = function(name, category, description, price) {
+    document.getElementById('menu-category').value = category;
+    document.getElementById('menu-name').value = name;
+    document.getElementById('menu-description').value = description;
+    document.getElementById('menu-price').value = price;
+    window.showToast('Modifiez le plat puis cliquez Ajouter pour enregistrer.', 'info');
+  };
+
+  window.deleteMenuItemPrompt = async function(name, category) {
+    if (!confirm(`Supprimer le plat "${name}" (${category}) ?`)) return;
+    // fetch all menu items to find the _id
+    const res = await fetch('/api/menu');
+    const menuData = await res.json();
+    let foundId = null;
+    Object.entries(menuData).forEach(([cat, group]) => {
+      if (cat === category && group.items) {
+        const item = group.items.find((it) => it.name === name);
+        if (item && item._id) foundId = item._id;
+      }
+    });
+    if (!foundId) return window.showToast('Plat introuvable', 'error');
+    const token = localStorage.getItem('restaurant_token');
+    const delRes = await fetch(`/api/menu/${foundId}`, {
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    if (delRes.ok) {
+      window.showToast('Plat supprimé', 'success');
+      loadMenuItems();
+    } else {
+      window.showToast('Erreur suppression', 'error');
+    }
+  };
+
+  document.getElementById('add-menu-form')?.addEventListener('submit', addMenuItem);
+  loadMenuItems();
 
   return { updateReservationsList, updateStatistics };
 }
